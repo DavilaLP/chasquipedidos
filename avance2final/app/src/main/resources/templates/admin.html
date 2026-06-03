@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChasquiPedidos | Panel Administrativo</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body>
+
+<div class="admin-container">
+    <aside class="sidebar">
+        <h2><a th:href="@{/}" style="color: inherit; text-decoration: none;"><i class="fas fa-motorcycle"></i> <span>Chasqui</span></a></h2>
+        <nav>
+            <a href="#" onclick="showSection('dashboard')"><i class="fas fa-chart-line"></i> <span>Dashboard</span></a>
+            <a href="#" onclick="showSection('pedidos')"><i class="fas fa-box"></i> <span>Pedidos</span></a>
+            <a href="#" onclick="showSection('productos')"><i class="fas fa-hamburger"></i> <span>Productos</span></a>
+            <a href="#" onclick="showSection('categorias')"><i class="fas fa-tags"></i> <span>Categorías</span></a>
+            <a href="#" onclick="showSection('motorizados')"><i class="fas fa-truck-fast"></i> <span>Motorizados</span></a>
+            <a href="#" onclick="showSection('quejas')"><i class="fas fa-frown"></i> <span>Quejas</span></a>
+            <a href="#" onclick="showSection('usuarios')"><i class="fas fa-users"></i> <span>Usuarios</span></a>
+        </nav>
+    </aside>
+
+    <main class="content">
+
+        <section id="dashboard" class="section active">
+            <h2><i class="fas fa-chart-simple"></i> Resumen General</h2>
+            <div class="cards">
+                <div class="card">
+                    <div class="card-icon"><i class="fas fa-user"></i></div>
+                    <div class="card-info">
+                        <p>Usuarios registrados</p>
+                        <h3 id="totalUsuarios">0</h3>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-icon"><i class="fas fa-shopping-cart"></i></div>
+                    <div class="card-info">
+                        <p>Pedidos totales</p>
+                        <h3 id="totalPedidos">0</h3>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-icon"><i class="fas fa-motorcycle"></i></div>
+                    <div class="card-info">
+                        <p>Motorizados activos</p>
+                        <h3 id="totalMotorizados">0</h3>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-icon"><i class="fas fa-dollar-sign"></i></div>
+                    <div class="card-info">
+                        <p>Ingresos netos</p>
+                        <h3 id="totalIngresos">S/ 0</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="cards secondary">
+                <div class="card">
+                    <div class="card-icon"><i class="fas fa-hourglass-half"></i></div>
+                    <div class="card-info">
+                        <p>Pedidos pendientes</p>
+                        <h3 id="pendientesCount">0</h3>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-icon"><i class="fas fa-check-circle"></i></div>
+                    <div class="card-info">
+                        <p>Pedidos entregados</p>
+                        <h3 id="entregadosCount">0</h3>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                    <div class="card-info">
+                        <p>Quejas por resolver</p>
+                        <h3 id="quejasPendientes">0</h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="pedidos" class="section">
+            <h2><i class="fas fa-clipboard-list"></i> Gestión de Pedidos</h2>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Cliente</th>
+                            <th>Dirección</th>
+                            <th>Estado</th>
+                            <th>Monto</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaPedidos"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="motorizados" class="section">
+            <h2><i class="fas fa-id-card"></i> Solicitudes de Motorizados</h2>
+            <div id="listaMotorizados" class="motorizados-grid"></div>
+            <div style="margin-top: 2rem;">
+                <h3><i class="fas fa-check-circle"></i> Motorizados Activos</h3>
+                <div id="activosList" class="motorizados-grid"></div>
+            </div>
+        </section>
+
+        <section id="quejas" class="section">
+            <h2><i class="fas fa-message"></i> Centro de Quejas</h2>
+            <div id="quejasContainer"></div>
+        </section>
+
+        <section id="usuarios" class="section">
+            <h2><i class="fas fa-user-pen"></i> Usuarios del Sistema</h2>
+            <div id="usuariosLista" class="usuarios-grid"></div>
+        </section>
+
+        <section id="productos" class="section">
+            <h2><i class="fas fa-hamburger"></i> Gestión de Productos</h2>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; gap: 15px; flex-wrap: wrap;">
+                <button onclick="nuevoProducto()" style="background: #10b981; border: none; padding: 10px 20px; border-radius: 8px; color: white; cursor: pointer; font-weight: 500;">
+                    <i class="fas fa-plus"></i> Nuevo Producto
+                </button>
+                <div style="max-width: 300px; flex: 1;">
+                    <input type="text" id="buscarAdminProductos" placeholder="Buscar productos..." oninput="filtrarProductosAdmin()" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2); color: white;">
+                </div>
+            </div>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Precio</th>
+                            <th>Stock</th>
+                            <th>Categoría</th>
+                            <th>Restaurante</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaProductos"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="categorias" class="section">
+            <h2><i class="fas fa-tags"></i> Gestión de Categorías</h2>
+            <div style="margin-bottom: 1.5rem;">
+                <button onclick="nuevaCategoria()" style="background: #10b981; border: none; padding: 10px 20px; border-radius: 8px; color: white; cursor: pointer; font-weight: 500;">
+                    <i class="fas fa-plus"></i> Nueva Categoría
+                </button>
+            </div>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Descripción</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaCategorias"></tbody>
+                </table>
+            </div>
+        </section>
+        
+        <footer>© 2025 ChasquiPedidos — Entregas rápidas y seguras</footer>
+    </main>
+</div>
+
+<div id="modal" class="modal hidden">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeModal()">&times;</span>
+        <div id="modalBody"></div>
+    </div>
+</div>
+
+<script th:src="@{/js/admin.js}"></script>
+</body>
+</html>

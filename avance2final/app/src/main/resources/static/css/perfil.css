@@ -1,0 +1,106 @@
+.perfil-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 25px;
+}
+
+.container {
+    max-width: 900px;
+    margin: auto;
+}
+
+.card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    transition: transform 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+}
+
+.perfil-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.perfil-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+}
+
+.avatar img {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #222;
+}
+
+.perfil-info h2 {
+    margin: 0;
+    font-size: 22px;
+}
+
+.perfil-info p {
+    margin: 3px 0 0;
+    color: #666;
+}
+
+.btn-edit {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    background: #111;
+    color: white;
+    font-weight: bold;
+    transition: background 0.3s ease;
+}
+
+.btn-edit:hover {
+    background: #333;
+}
+
+.card.info h3 {
+    margin-bottom: 10px;
+    font-size: 18px;
+    border-left: 4px solid #111;
+    padding-left: 10px;
+}
+
+.card.info p {
+    margin: 8px 0;
+    color: #444;
+}
+
+
+.acciones {
+    display: flex;
+    gap: 12px;
+}
+
+.btn-action {
+    flex: 1;
+    text-align: center;
+    padding: 12px;
+    background: #111;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.btn-action:hover {
+    background: #333;
+    transform: scale(1.03);
+}

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Motorizado | ChasquiPedidos</title>
+
+    <link rel="stylesheet" th:href="@{/css/global.css}">
+    <link rel="stylesheet" th:href="@{/css/motorizado.css}">
+</head>
+
+<body>
+
+<nav class="custom-navbar">
+    <div class="container">
+        <h2 class="logo">Panel Motorizado</h2>
+    </div>
+</nav>
+
+<section class="container grid">
+
+    <div class="card">
+        <h3>Estado</h3>
+        <p class="status online">Disponible</p>
+    </div>
+
+    <div class="card">
+        <h3>Calificación</h3>
+        <p>⭐ 4.8 / 5</p>
+    </div>
+
+    <div class="card">
+        <h3>Ganancias hoy</h3>
+        <p>S/ 85</p>
+    </div>
+
+</section>
+
+<section class="container">
+
+    <h2>Pedidos disponibles</h2>
+
+    <div class="order-card">
+        <div>
+            <h4>Pizza Familiar</h4>
+            <p>Restaurante: Pizza House</p>
+            <p>Dirección: Av. Ejemplo 123</p>
+        </div>
+
+        <div class="actions">
+            <a href="#" class="accept">Aceptar</a>
+            <a href="#" class="reject">Rechazar</a>
+        </div>
+    </div>
+
+</section>
+
+<section class="container">
+
+    <h2>Ruta de entrega</h2>
+
+    <div id="map"></div>
+
+</section>
+
+<script th:src="@{/js/motorizado.js}"></script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=TU_API_KEY&callback=initMap" async defer></script>
+
+</body>
+</html>

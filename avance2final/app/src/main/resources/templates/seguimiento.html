@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seguimiento | ChasquiPedidos</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" th:href="@{/css/global.css}">
+    <link rel="stylesheet" th:href="@{/css/seguimiento.css}">
+</head>
+<body>
+
+    <div class="top-nav">
+        <a th:href="@{/}" style="color: white; text-decoration: none; font-weight: bold; margin-left: 20px;"><i class="fas fa-arrow-left"></i> Volver al Inicio</a>
+    </div>
+
+    <div class="main-container">
+        
+        <h1 class="page-title">SEGUIMIENTO DEL PEDIDO</h1>
+
+        <!-- Si no hay pedidos en curso -->
+        <div th:if="${pedido == null}" class="info-bar" style="justify-content: center; text-align: center; padding: 30px;">
+            <h3 style="color: #ef4444;">No tienes pedidos activos en este momento</h3>
+        </div>
+
+        <!-- Si hay pedido activo -->
+        <div th:if="${pedido != null}">
+            <div class="info-bar">
+                <div class="info-item">
+                    <span class="info-label">ID Pedido:</span>
+                    <span class="info-value" th:text="${'#' + pedido.idPedido}">#0</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Fecha y Hora:</span>
+                    <span class="info-value" th:text="${#temporals.format(pedido.fechaPedido, 'dd/MM/yyyy HH:mm')}">N/A</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Cliente:</span>
+                    <span class="info-value" th:text="${pedido.usuario.nombres + ' ' + (pedido.usuario.apellidos != null ? pedido.usuario.apellidos : '')}">N/A</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Motorizado:</span>
+                    <span class="info-value" th:text="${motorizado}">No asignado</span>
+                </div>
+            </div>
+
+            <div class="cards-container">
+                <!-- Card 1: Recibido / Pendiente -->
+                <div class="status-card" th:classappend="${estado == 'Pendiente' ? 'active' : ''}">
+                    <div class="icon-box">
+                        📦
+                    </div>
+                    <h3 class="card-title">Pedido Recibido</h3>
+                    <p class="card-desc">Estamos procesando tu orden</p>
+                </div>
+
+                <!-- Card 2: Preparando -->
+                <div class="status-card" th:classappend="${estado == 'Preparando pedido' ? 'active' : ''}">
+                    <div class="icon-box" style="background: #e6f6eb;">
+                        🍳
+                    </div>
+                    <h3 class="card-title">Preparando</h3>
+                    <p class="card-desc">El restaurante prepara tus platos</p>
+                </div>
+
+                <!-- Card 3: En camino / En delivery -->
+                <div class="status-card" th:classappend="${estado == 'En delivery' ? 'active' : ''}">
+                    <div class="icon-box" style="background: #fff4e5;">
+                        🛵
+                    </div>
+                    <h3 class="card-title">En camino</h3>
+                    <p class="card-desc">El repartidor va hacia tu dirección</p>
+                </div>
+
+                <!-- Card 4: Entregado -->
+                <div class="status-card" th:classappend="${estado == 'Entregado' ? 'active' : ''}">
+                    <div class="icon-box" style="background: #eef2ff;">
+                        🤝
+                    </div>
+                    <h3 class="card-title">Entregado</h3>
+                    <p class="card-desc">¡Disfruta tu pedido!</p>
+                </div>
+            </div>
+
+            <div class="details-section">
+                <h2 class="section-title">Detalles del Pedido</h2>
+                <table class="details-table">
+                    <thead>
+                        <tr>
+                            <th>PRODUCTO</th>
+                            <th>CANTIDAD</th>
+                            <th>SUBTOTAL</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="det : ${pedido.detalles}">
+                            <td th:text="${det.producto.nombre}">Producto</td>
+                            <td th:text="${det.cantidad}">0</td>
+                            <td th:text="${'S/ ' + det.subtotal}">S/ 0.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div style="text-align: right; margin-top: 15px; font-size: 1.2rem; font-weight: bold; color: white;">
+                    Total: <span th:text="${'S/ ' + pedido.total}">S/ 0.00</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

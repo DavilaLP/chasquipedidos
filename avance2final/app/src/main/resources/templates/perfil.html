@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<htm    l lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Perfil | ChasquiPedidos</title>
+
+    <link rel="stylesheet" th:href="@{/css/global.css}">
+    <link rel="stylesheet" th:href="@{/css/perfil.css}">
+
+</head>
+
+<body>
+
+<nav class="custom-navbar">
+    <div class="container">
+        <h2 class="logo">Mi Perfil</h2>
+    </div>
+</nav>
+
+<section class="container perfil-wrapper">
+
+    <div class="card perfil-card">
+
+        <div class="perfil-header">
+
+            <div class="avatar">
+                <img src="/img/user-default.png" alt="Usuario">
+            </div>
+
+            <div class="perfil-info">
+                <h2 th:text="${nombre}">Cristofer Huamán</h2>
+                <p th:text="${email}">usuario@email.com</p>
+            </div>
+
+        </div>
+
+        <button class="btn-edit">Editar perfil</button>
+
+    </div>
+
+    <div class="card info">
+
+        <h3>Datos personales</h3>
+
+        <p>Teléfono: <b th:text="${telefono}">+51 999 888 777</b></p>
+        <p>Dirección: <b th:text="${direccion}">Av. Ejemplo 123, Arequipa</b></p>
+
+    </div>
+
+    <div class="card info">
+
+        <h3>Actividad</h3>
+
+        <p>Pedidos realizados: <b th:text="${totalPedidos}">12</b></p>
+        <p>Último pedido: <b th:text="${ultimoPedido}">Pizza Familiar</b></p>
+        <p>Estado cuenta: <b th:text="${estadoCuenta}">Activo</b></p>
+
+    </div>
+
+    <div class="card info">
+
+        <h3>Configuración</h3>
+
+        <p>Método de pago: <b th:text="${metodoPago}">Contraentrega</b></p>
+        <p>Tipo usuario: <b th:text="${tipoUsuario}">Cliente</b></p>
+
+    </div>
+
+    <div class="acciones">
+
+        <a th:href="@{/carrito}" class="btn-action">Ver carrito</a>
+        <a th:href="@{/pago}" class="btn-action">Ir a pago</a>
+
+    </div>
+
+</section>
+
+</body>
+</html>

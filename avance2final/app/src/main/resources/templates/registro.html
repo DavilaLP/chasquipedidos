@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro - ChasquiPedidos</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/global.css}">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/responsive.css}">
+    <link rel="stylesheet" th:href="@{/css/registro.css}">
+</head>
+<body>
+<div class="background-blur blur-one"></div>
+<div class="background-blur blur-two"></div>
+
+<nav class="navbar navbar-expand-lg custom-navbar">
+    <div class="container-fluid">
+        <a class="navbar-brand logo" th:href="@{/}">
+            <i class="fas fa-motorcycle"></i> ChasquiPedidos
+        </a>
+        
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navbarContent">
+            <ul class="navbar-nav ms-auto align-items-center">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/}">Inicio</a>
+                </li>
+                <li class="nav-item ms-3">
+                    <a class="btn register-btn" th:href="@{/registro}">
+                        <i class="fas fa-user-plus"></i> Registrarse
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="registro-card">
+        <div class="registro-header">
+            <h2><i class="fas fa-user-plus"></i> Crear Cuenta</h2>
+            <p>Únete a ChasquiPedidos y empieza a disfrutar</p>
+        </div>
+        
+        <div class="registro-body">
+            <form id="formRegistro">
+                <div class="form-group">
+                    <label><i class="fas fa-user"></i> Nombre completo</label>
+                    <input type="text" class="form-control" name="nombreCompleto" placeholder="Ej: Juan Pérez" required>
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-envelope"></i> Correo electrónico</label>
+                    <input type="email" class="form-control" name="email" placeholder="ejemplo@correo.com" required>
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-lock"></i> Contraseña</label>
+                    <input type="password" class="form-control" name="password" placeholder="Mínimo 6 caracteres" required>
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-map-marker-alt"></i> Dirección</label>
+                    <input type="text" class="form-control" name="direccion" placeholder="Calle, número, colonia" required>
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-phone"></i> Teléfono</label>
+                    <input type="tel" class="form-control" name="telefono" placeholder="Ej: 999888777" required>
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-calendar-alt"></i> Fecha de nacimiento</label>
+                    <input type="date" class="form-control" name="fechaNacimiento" required>
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-user-tag"></i> ¿Qué tipo de usuario eres?</label>
+                    <div class="tipo-usuario">
+                        <div>
+                            <input type="radio" name="tipoUsuario" id="cliente" value="CLIENTE" checked>
+                            <label for="cliente">
+                                <i class="fas fa-shopping-cart"></i> Cliente
+                            </label>
+                        </div>
+                        <div>
+                            <input type="radio" name="tipoUsuario" id="motorizado" value="MOTORIZADO">
+                            <label for="motorizado">
+                                <i class="fas fa-motorcycle"></i> Motorizado
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="opcionesMotorizado" style="display: none;">
+                    <div class="form-group">
+                        <label><i class="fas fa-motorcycle"></i> Tipo de vehículo</label>
+                        <div class="tipo-vehiculo">
+                            <div>
+                                <input type="radio" name="tipoVehiculo" id="moto" value="MOTO">
+                                <label for="moto">
+                                    <i class="fas fa-motorcycle"></i> Moto
+                                </label>
+                            </div>
+                            <div>
+                                <input type="radio" name="tipoVehiculo" id="bicicleta" value="BICICLETA">
+                                <label for="bicicleta">
+                                    <i class="fas fa-bicycle"></i> Bicicleta
+                                </label>
+                            </div>
+                            <div>
+                                <input type="radio" name="tipoVehiculo" id="carro" value="CARRO">
+                                <label for="carro">
+                                    <i class="fas fa-car"></i> Carro
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-file-alt"></i> Subir licencia (foto o PDF)</label>
+                        <input type="file" class="form-control" name="licencia" accept="image/*,application/pdf">
+                        <small style="color: #64748b; font-size: 0.7rem;">Formatos: JPG, PNG, PDF (máx 5MB)</small>
+                    </div>
+                    
+                    <div id="campoModelo" style="display: none;">
+                        <div class="form-group">
+                            <label><i class="fas fa-tag"></i> Modelo del vehículo</label>
+                            <input type="text" class="form-control" name="modeloVehiculo" placeholder="Ej: Yamaha YBR 125 / Toyota Corolla 2020">
+                        </div>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn-registro">
+                    <i class="fas fa-user-check"></i> Registrarse
+                </button>
+                
+                <div class="login-link">
+                    ¿Ya tienes cuenta? <a th:href="@{/login}">Inicia sesión aquí</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<footer class="footer">
+    <div class="container">
+        <div class="footer-content">
+            <div class="row">
+                <div class="col-md-4">
+                    <h4><i class="fas fa-motorcycle"></i> ChasquiPedidos</h4>
+                    <p>Tu app de delivery favorita, rápida y segura.</p>
+                </div>
+                <div class="col-md-4">
+                    <h5>Enlaces rápidos</h5>
+                    <ul>
+                        <li><a th:href="@{/}">Inicio</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>Síguenos</h5>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <p class="text-center">&copy; 2024 ChasquiPedidos - Todos los derechos reservados</p>
+        </div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/app.js}"></script>
+<script th:src="@{/js/navbar.js}"></script>
+<script th:src="@{/js/registro.js}"></script>
+</body>
+</html>
