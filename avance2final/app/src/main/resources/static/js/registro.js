@@ -1,11 +1,14 @@
 function initRegistro() {
+    // Obtener el formulario principal de registro
     const form = document.getElementById('formRegistro');
     if (!form) return;
     
+    // Elementos de radio para tipo de usuario y contenedor de opciones
     const radioCliente = document.getElementById('cliente');
     const radioMotorizado = document.getElementById('motorizado');
     const opcionesMotorizado = document.getElementById('opcionesMotorizado');
     
+    // Configurar la visibilidad del panel de motorizado según la selección
     if (radioCliente && radioMotorizado) {
         radioCliente.addEventListener('change', function() {
             if (this.checked) {
@@ -20,11 +23,13 @@ function initRegistro() {
         });
     }
     
+    // Elementos para el tipo de vehículo
     const radioMoto = document.getElementById('moto');
     const radioCarro = document.getElementById('carro');
     const radioBicicleta = document.getElementById('bicicleta');
     const campoModelo = document.getElementById('campoModelo');
     
+    // Mostrar campo del modelo del vehículo solo si es moto o carro
     function toggleCampoModelo() {
         if (radioMoto && radioCarro) {
             if (radioMoto.checked || radioCarro.checked) {
@@ -39,16 +44,18 @@ function initRegistro() {
     if (radioCarro) radioCarro.addEventListener('change', toggleCampoModelo);
     if (radioBicicleta) radioBicicleta.addEventListener('change', toggleCampoModelo);
     
+    // Manejo del evento de envío del formulario
     form.addEventListener('submit', function(event) {
-        event.preventDefault();
+        event.preventDefault(); // Evitar recarga de la página
         
+        // Ejecutar validaciones del cliente antes de enviar
         if (!validarFormularioRegistro()) {
             mostrarToast('Por favor, corrige los errores en el formulario', 'error');
         } else {
-            // Preparar datos para el envío
+            // Preparar datos para el envío mediante fetch
             const formData = new FormData(form);
             
-            // Enviar datos al servidor
+            // Enviar petición asíncrona al backend
             fetch('/api/registro', {
                 method: 'POST',
                 body: formData
@@ -76,6 +83,7 @@ function initRegistro() {
         }
     });
     
+    // Filtro para el campo de teléfono (solo números, max 9)
     const telefonoInput = document.querySelector('[name="telefono"]');
     if (telefonoInput) {
         telefonoInput.addEventListener('input', function(e) {
@@ -83,6 +91,7 @@ function initRegistro() {
         });
     }
     
+    // Filtro para el campo nombre (solo letras y espacios)
     const nombreInput = document.querySelector('[name="nombreCompleto"]');
     if (nombreInput) {
         nombreInput.addEventListener('input', function(e) {
@@ -91,6 +100,10 @@ function initRegistro() {
     }
 }
 
+/**
+ * Función que valida todos los campos del formulario de registro
+ * @returns {boolean} true si todo es válido, de lo contrario false
+ */
 function validarFormularioRegistro() {
     let isValid = true;
     

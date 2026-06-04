@@ -15,6 +15,9 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Controlador encargado de manejar el registro de nuevos usuarios y repartidores.
+ */
 @Controller
 public class RegistroController {
 
@@ -40,10 +43,11 @@ public class RegistroController {
             @RequestParam String tipoUsuario,
             @RequestParam(required = false) String tipoVehiculo) {
 
+        // Estructura para almacenar la respuesta JSON
         Map<String, Object> response = new HashMap<>();
 
         try {
-            // Separar nombres y apellidos
+            // Separar nombres y apellidos a partir del primer espacio encontrado
             String nombres = nombreCompleto;
             String apellidos = "";
             if (nombreCompleto.contains(" ")) {
@@ -52,16 +56,18 @@ public class RegistroController {
                 apellidos = nombreCompleto.substring(firstSpace + 1);
             }
 
+            // Si el usuario es de tipo MOTORIZADO, se guarda también en la entidad Repartidor
             if ("MOTORIZADO".equals(tipoUsuario)) {
                 Repartidor repartidor = new Repartidor();
                 repartidor.setNombres(nombres);
                 repartidor.setApellidos(apellidos);
                 repartidor.setTelefono(telefono);
                 repartidor.setVehiculo(tipoVehiculo);
-                repartidor.setEstado(true);
+                repartidor.setEstado(true); // Se marca como activo
                 repartidorRepository.save(repartidor);
             }
 
+            // Se crea y configura el objeto Usuario con los datos recibidos
             Usuario usuario = new Usuario();
             usuario.setNombres(nombres);
             usuario.setApellidos(apellidos);
@@ -69,14 +75,17 @@ public class RegistroController {
             usuario.setContrasena(password);
             usuario.setDireccion(direccion);
             usuario.setTelefono(telefono);
-            usuario.setFechaRegist(LocalDateTime.now());
-            usuario.setEstado(true);
+            usuario.setFechaRegist(LocalDateTime.now()); // Fecha actual de registro
+            usuario.setEstado(true); // Usuario activo
 
+            // Guardar el usuario en la base de datos
             usuarioRepository.save(usuario);
 
+            // Respuesta exitosa
             response.put("success", true);
             response.put("message", "Usuario registrado exitosamente");
         } catch (Exception e) {
+            // En caso de error, responder con mensaje de fallo
             response.put("success", false);
             response.put("message", "Error al registrar: " + e.getMessage());
         }

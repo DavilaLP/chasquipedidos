@@ -3,10 +3,15 @@ package com.appdelivery.app;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+/**
+ * Clase principal de la aplicación Spring Boot.
+ * Punto de entrada para iniciar la aplicación web.
+ */
 @SpringBootApplication
 public class AppApplication {
 
 	public static void main(String[] args) {
+		// Inicia la aplicación Spring Boot
 		SpringApplication.run(AppApplication.class, args);
 	}
 
