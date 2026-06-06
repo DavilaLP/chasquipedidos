@@ -6,6 +6,8 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -71,7 +73,7 @@ public class PedidoRestController {
 
     // Crear un nuevo pedido
     @PostMapping
-    public ResponseEntity<?> createPedido(@RequestBody PedidoRequest request, HttpSession session) {
+    public ResponseEntity<?> createPedido(@Valid @RequestBody PedidoRequest request, HttpSession session) {
         Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
         if (usuario == null) {
             List<Usuario> usuarios = usuarioRepository.findAll();
@@ -129,11 +131,44 @@ public class PedidoRestController {
         return ResponseEntity.status(201).body(nuevoPedido);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deletePedido(@PathVariable Integer id) {
+        return pedidoRepository.findById(id).map(pedido -> {
+            pedidoRepository.delete(pedido);
+            return ResponseEntity.ok().build();
+        }).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updatePedido(@PathVariable Integer id, @Valid @RequestBody PedidoRequest request) {
+        return pedidoRepository.findById(id).map(pedido -> {
+            if (request.getDireccionEntrega() != null) {
+                pedido.setDireccionEntrega(request.getDireccionEntrega());
+            }
+            if (request.getObservaciones() != null) {
+                pedido.setObservaciones(request.getObservaciones());
+            }
+            if (request.getMetodoPago() != null) {
+                pedido.setMetodoPago(request.getMetodoPago());
+            }
+            if (request.getTotal() != null) {
+                pedido.setTotal(request.getTotal());
+            }
+            Pedido actualizado = pedidoRepository.save(pedido);
+            return ResponseEntity.ok(actualizado);
+        }).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
     public static class PedidoRequest {
         private String direccionEntrega;
         private String observaciones;
         private String metodoPago;
+        
+        @NotNull(message = "El total es obligatorio")
+        @Min(value = 0, message = "El total no puede ser negativo")
         private BigDecimal total;
+        
+        @NotEmpty(message = "Debe haber al menos un item en el pedido")
         private List<PedidoItemRequest> items;
 
         public String getDireccionEntrega() { return direccionEntrega; }
@@ -149,8 +184,15 @@ public class PedidoRestController {
     }
 
     public static class PedidoItemRequest {
+        @NotBlank(message = "El nombre del producto es obligatorio")
         private String nombre;
+        
+        @NotNull(message = "El precio es obligatorio")
+        @Min(value = 0, message = "El precio no puede ser negativo")
         private BigDecimal precio;
+        
+        @NotNull(message = "La cantidad es obligatoria")
+        @Min(value = 1, message = "La cantidad debe ser al menos 1")
         private Integer cantidad;
 
         public String getNombre() { return nombre; }

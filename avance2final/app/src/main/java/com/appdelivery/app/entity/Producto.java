@@ -1,6 +1,7 @@
 package com.appdelivery.app.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -21,15 +22,21 @@ public class Producto {
     @JoinColumn(name = "id_categoria", nullable = false)
     private CategoriaProducto categoria;
 
+    @NotBlank(message = "El nombre del producto es obligatorio")
+    @Size(max = 150, message = "El nombre no puede superar los 150 caracteres")
     @Column(nullable = false, length = 150)
     private String nombre;
 
     @Column(columnDefinition = "TEXT")
     private String descripcion;
 
+    @NotNull(message = "El precio es obligatorio")
+    @Min(value = 0, message = "El precio no puede ser negativo")
     @Column(precision = 10, scale = 2)
     private BigDecimal precio;
 
+    @NotNull(message = "El stock es obligatorio")
+    @Min(value = 0, message = "El stock no puede ser negativo")
     private Integer stock;
 
     private Boolean disponible;

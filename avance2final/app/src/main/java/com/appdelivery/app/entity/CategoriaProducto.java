@@ -1,6 +1,7 @@
 package com.appdelivery.app.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import java.util.List;
 
 @Entity
@@ -12,6 +13,8 @@ public class CategoriaProducto {
     @Column(name = "id_categoria")
     private Integer idCategoria;
 
+    @NotBlank(message = "El nombre de la categoría es obligatorio")
+    @Size(max = 100, message = "El nombre no puede superar los 100 caracteres")
     @Column(nullable = false, length = 100)
     private String nombre;
 

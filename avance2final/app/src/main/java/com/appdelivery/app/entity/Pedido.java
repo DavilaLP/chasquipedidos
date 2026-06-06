@@ -1,6 +1,7 @@
 package com.appdelivery.app.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -14,6 +15,7 @@ public class Pedido {
     @Column(name = "id_pedido")
     private Integer idPedido;
 
+    @NotNull(message = "El usuario es obligatorio para el pedido")
     @ManyToOne
     @JoinColumn(name = "id_usuario", nullable = false)
     private Usuario usuario;
@@ -25,6 +27,7 @@ public class Pedido {
     @Column(name = "fecha_pedido")
     private LocalDateTime fechaPedido;
 
+    @Min(value = 0, message = "El total no puede ser negativo")
     @Column(precision = 10, scale = 2)
     private BigDecimal total;
 

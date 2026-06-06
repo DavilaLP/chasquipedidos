@@ -1,6 +1,7 @@
 package com.appdelivery.app.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import java.math.BigDecimal;
 
 @Entity
@@ -17,13 +18,18 @@ public class DetallePedido {
     @com.fasterxml.jackson.annotation.JsonIgnore
     private Pedido pedido;
 
+    @NotNull(message = "El producto es obligatorio en el detalle")
     @ManyToOne
     @JoinColumn(name = "id_producto", nullable = false)
     private Producto producto;
 
+    @NotNull(message = "La cantidad es obligatoria")
+    @Min(value = 1, message = "La cantidad debe ser al menos 1")
     @Column(nullable = false)
     private Integer cantidad;
 
+    @NotNull(message = "El precio unitario es obligatorio")
+    @Min(value = 0, message = "El precio unitario no puede ser negativo")
     @Column(name = "precio_unitario", nullable = false, precision = 10, scale = 2)
     private BigDecimal precioUnitario;
 
