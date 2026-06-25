@@ -77,6 +77,7 @@ public class RegistroController {
             usuario.setTelefono(telefono);
             usuario.setFechaRegist(LocalDateTime.now()); // Fecha actual de registro
             usuario.setEstado(true); // Usuario activo
+            usuario.setRol("CLIENTE"); // Rol por defecto
 
             // Guardar el usuario en la base de datos
             usuarioRepository.save(usuario);

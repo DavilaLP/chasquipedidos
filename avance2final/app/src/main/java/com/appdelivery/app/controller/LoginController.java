@@ -28,7 +28,14 @@ public class LoginController {
             HttpSession session,
             Model model) {
 
-        Usuario usuario = usuarioRepository.findByCorreo(email);
+        java.util.List<Usuario> usuarios = usuarioRepository.findAll();
+        Usuario usuario = null;
+        for (Usuario u : usuarios) {
+            if (u.getCorreo() != null && u.getCorreo().equalsIgnoreCase(email)) {
+                usuario = u;
+                break;
+            }
+        }
 
         if (usuario != null && usuario.getContrasena().equals(password)) {
             session.setAttribute("usuarioLogueado", usuario);

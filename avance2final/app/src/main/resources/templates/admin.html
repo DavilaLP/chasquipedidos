@@ -82,6 +82,25 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- Sección de Reportes y Descargas -->
+            <div class="report-section" style="margin-top: 2rem; background: rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
+                <h3 style="margin-bottom: 1rem; color: #f97316;"><i class="fas fa-file-invoice"></i> Reportes e Informes del Sistema</h3>
+                <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                    <a th:href="@{/admin/reportes/pedidos/pdf}" class="btn" style="background: #ef4444; border: none; padding: 10px 20px; border-radius: 8px; color: white; text-decoration: none; font-weight: 500; display: inline-flex; align-items: center; gap: 8px; cursor: pointer;">
+                        <i class="fas fa-file-pdf"></i> Exportar Pedidos (PDF)
+                    </a>
+                    <a th:href="@{/admin/reportes/pedidos/excel}" class="btn" style="background: #10b981; border: none; padding: 10px 20px; border-radius: 8px; color: white; text-decoration: none; font-weight: 500; display: inline-flex; align-items: center; gap: 8px; cursor: pointer;">
+                        <i class="fas fa-file-excel"></i> Exportar Pedidos (Excel)
+                    </a>
+                    <a th:href="@{/admin/reportes/usuarios/pdf}" class="btn" style="background: #ef4444; border: none; padding: 10px 20px; border-radius: 8px; color: white; text-decoration: none; font-weight: 500; display: inline-flex; align-items: center; gap: 8px; cursor: pointer;">
+                        <i class="fas fa-file-pdf"></i> Exportar Usuarios (PDF)
+                    </a>
+                    <a th:href="@{/admin/reportes/usuarios/excel}" class="btn" style="background: #10b981; border: none; padding: 10px 20px; border-radius: 8px; color: white; text-decoration: none; font-weight: 500; display: inline-flex; align-items: center; gap: 8px; cursor: pointer;">
+                        <i class="fas fa-file-excel"></i> Exportar Usuarios (Excel)
+                    </a>
+                </div>
+            </div>
         </section>
 
         <section id="pedidos" class="section">

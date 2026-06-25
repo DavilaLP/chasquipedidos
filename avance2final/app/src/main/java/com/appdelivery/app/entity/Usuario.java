@@ -48,6 +48,9 @@ public class Usuario {
 
     private Boolean estado;
 
+    @Column(length = 50)
+    private String rol;
+
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     @com.fasterxml.jackson.annotation.JsonIgnore
     private List<Pedido> pedidos;
@@ -131,5 +134,13 @@ public class Usuario {
 
     public void setPedidos(List<Pedido> pedidos) {
         this.pedidos = pedidos;
+    }
+
+    public String getRol() {
+        return rol;
+    }
+
+    public void setRol(String rol) {
+        this.rol = rol;
     }
 }

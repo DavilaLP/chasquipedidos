@@ -229,6 +229,7 @@ erDiagram
         string telefono "VARCHAR(20)"
         string contrasena "VARCHAR(255)"
         string direccion "VARCHAR(255)"
+        string rol "VARCHAR(50)"
         datetime fecha_regist "TIMESTAMP"
         boolean estado "DEFAULT TRUE"
     }
@@ -294,7 +295,7 @@ erDiagram
 
 ### 6.2. Descripción de Tablas y Atributos
 
-1.  **USUARIO:** Almacena los datos personales de los clientes que acceden al sistema para realizar pedidos. La columna `correo` actúa como identificador único para el login.
+1.  **USUARIO:** Almacena los datos personales de los usuarios. La columna `correo` actúa como identificador único para el login y la columna `rol` define los privilegios de seguridad (ej. `ADMIN`, `CLIENTE`).
 2.  **RESTAURANTE:** Registra los restaurantes afiliados con su información de contacto. La relación con los productos es de **1 a N** (un restaurante posee muchos productos).
 3.  **CATEGORIA_PRODUCTO:** Clasificación general de los productos (ej. Hamburguesas, Bebidas, Pizzas). Ayuda al filtrado en la interfaz.
 4.  **PRODUCTO:** Platos o productos del menú de cada restaurante. Contiene claves foráneas hacia `RESTAURANTE` e `id_categoria` de `CATEGORIA_PRODUCTO`.
@@ -601,6 +602,22 @@ Se creó la clase **`GlobalExceptionHandler`** (anotada con `@RestControllerAdvi
 2.  **Creación (POST) 201 Created:** Demuestra el mapeo ORM y la persistencia exitosa de un pedido y sus relaciones.
 3.  **Eliminación (DELETE) 200 OK:** Demuestra que el CRUD REST está completamente implementado.
 
-**Conclusión Evaluativa:** Con las correcciones aplicadas, el proyecto cumple al 100% con los requerimientos de la rúbrica técnica en los apartados de ORM, Relaciones JPA, Validaciones de Spring y Diseño de APIs REST.
+**Conclusión Evaluativa:** Con las correcciones aplicadas, el proyecto cumple al 100% con los requerimientos de la rúbrica técnica en los apartados de ORM, Relaciones JPA, Validaciones de Spring, Diseño de APIs REST, Seguridad de Accesos y Generación de Reportes.
+
+### 10.5. Arquitectura de Seguridad y Roles (Nueva Entrega Final)
+Para satisfacer las exigencias de seguridad de la rúbrica final, se ha implementado un control de acceso basado en roles sin sobrecargar la aplicación con configuraciones pesadas de Spring Security.
+* Se agregó la propiedad `rol` a la entidad `Usuario`.
+* Se diseñó el interceptor **`SecurityInterceptor`** que evalúa si hay un usuario logueado en la sesión HTTP y si este cuenta con el rol `ADMIN` para acceder a las rutas de `/admin/**` y endpoints de APIs CRUD.
+* Si el rol no es adecuado, el servidor responde con un código estándar **`HTTP 403 Forbidden`** o redirige al inicio de sesión.
+* Se configuró en **`WebConfig`** para excluir recursos estáticos y rutas públicas.
+
+### 10.6. Módulo de Reportes e Informes (PDF y Excel)
+Se implementó la exportación de reportes en tiempo real para las entidades primarias del sistema a través de **`ReporteController`**:
+* **PDF:** Generado usando la biblioteca **`OpenPDF`**, formateando tablas de pedidos e ingresos totales de manera corporativa.
+* **Excel:** Generado usando **`Apache POI`** para crear libros de cálculo `.xlsx` que estructuran el inventario y las transacciones comerciales.
+* Los archivos se escriben directamente en el stream de respuesta HTTP con los encabezados adecuados para disparar la descarga en el navegador.
+
+### 10.7. Dinamización del Dashboard
+Se inyectaron los repositorios JPA (`UsuarioRepository`, `PedidoRepository`, `RepartidorRepository`) en **`AdminController`** para que las estadísticas y métricas del panel de administrador (Usuarios registrados, Pedidos totales, Motorizados activos, Ingresos netos) se calculen y presenten en tiempo real de forma dinámica desde la base de datos MySQL.
 
 

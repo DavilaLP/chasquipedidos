@@ -13,6 +13,7 @@ CREATE TABLE USUARIO (
     telefono VARCHAR(20),
     contrasena VARCHAR(255),
     direccion VARCHAR(255),
+    rol VARCHAR(50) DEFAULT 'CLIENTE',
     fecha_regist DATETIME DEFAULT CURRENT_TIMESTAMP,
     estado BOOLEAN DEFAULT TRUE
 );
@@ -123,7 +124,8 @@ INSERT INTO REPARTIDOR (nombres, apellidos, telefono, vehiculo, placa, estado) V
 ('Carlos', 'Gómez Torres', '+51 923456789', 'Motocicleta Yamaha', 'M203-TY', 1),
 ('Luis', 'Fernández Rivas', '+51 934567890', 'Bicicleta Eléctrica', 'B-987-LF', 1);
 
--- 9.5. Insertar un Usuario Cliente de prueba para login
-INSERT INTO USUARIO (nombres, apellidos, correo, telefono, contrasena, direccion, estado) VALUES
-('Cristofer', 'Huamani Mejia', 'cristofer@gmail.com', '+51 999888777', '123456', 'Av. Ejército 123, Arequipa', 1);
+-- 9.5. Insertar Usuarios de prueba con diferentes roles para login
+INSERT INTO USUARIO (nombres, apellidos, correo, telefono, contrasena, direccion, rol, estado) VALUES
+('Cristofer Admin', 'Huamani Mejia', 'cristofer@gmail.com', '+51 999888777', '123456', 'Av. Ejército 123, Arequipa', 'ADMIN', 1),
+('Juan Cliente', 'Pérez Quispe', 'juan@gmail.com', '+51 988877766', '123456', 'Calle Mercaderes 456, Arequipa', 'CLIENTE', 1);
 
