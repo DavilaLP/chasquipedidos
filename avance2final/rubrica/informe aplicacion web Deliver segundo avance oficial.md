@@ -99,6 +99,32 @@ Desarrollar una aplicación web de delivery que permita gestionar pedidos de man
 
    - Implementar el método de pago contra entrega. 
 
+## 3.3. Propuesta de Solución
+
+La solución propuesta consiste en el desarrollo de **ChasquiPedidos**, una plataforma web interactiva y dinámica que automatiza y centraliza el flujo de negocio de delivery:
+- **Catálogo Digital:** Los clientes exploran en tiempo real el menú y los restaurantes afiliados, filtrando y buscando productos de manera intuitiva.
+- **Automatización de Pedidos:** A través de un carrito de compras dinámico, los usuarios configuran su pedido y lo registran con un clic (modalidad contra entrega), eliminando el uso de llamadas y mensajes manuales.
+- **Seguimiento del Pedido:** Implementa un panel de seguimiento en vivo basado en una barra de progreso que cambia dinámicamente según el estado real de la base de datos.
+- **Panel Administrativo (Dashboard):** Herramienta centralizada para que el administrador gestione productos, categorías y repartidores, controle los estados de los pedidos y consulte métricas financieras e inventario en tiempo real.
+- **Seguridad por Roles:** Restringe el acceso a módulos de administración y APIs críticas utilizando interceptores de Spring según el tipo de usuario (ADMIN, CLIENTE, MOTORIZADO).
+
+## 3.4. Tecnologías Utilizadas para la Construcción de la Solución
+
+Para garantizar una arquitectura escalable, segura y responsiva, se seleccionaron las siguientes tecnologías:
+- **Backend:**
+  - **Java 21 (JDK 21):** Plataforma de desarrollo principal por su robustez, seguridad y rendimiento mejorado.
+  - **Spring Boot 3.x:** Framework base para agilizar la inyección de dependencias, configuración de servicios web y el servidor Tomcat embebido.
+  - **Spring Data JPA & Hibernate:** Tecnología de mapeo objeto-relacional (ORM) para interactuar con la base de datos MySQL de forma orientada a objetos, estableciendo relaciones bidireccionales fuertes.
+  - **Jakarta Validation:** Validaciones de datos seguras y robustas directo en las clases Entidad.
+  - **OpenPDF & Apache POI:** Bibliotecas usadas para generar reportes dinámicos de ventas y transacciones en formatos PDF y Excel respectivamente.
+- **Base de Datos:**
+  - **MySQL:** Motor de base de datos relacional robusto para almacenar de forma persistente e íntegra toda la información transaccional.
+- **Frontend y Presentación:**
+  - **HTML5 & CSS3:** Estructuración semántica y estilos de diseño personalizados (glassmorphism, animaciones y paletas armónicas).
+  - **Thymeleaf:** Motor de renderizado dinámico en servidor integrado con Spring Boot.
+  - **Bootstrap 5:** Framework de diseño responsivo para adaptar la plataforma a dispositivos móviles, tablets y PCs.
+  - **JavaScript (Vanilla Fetch API):** Programación asíncrona (AJAX) para comunicarse con las APIs REST sin recargar la página.
+
 4. Alcances y limitaciones 
 
 ## 4.1. Alcances 
