@@ -172,3 +172,12 @@
 .btn-track:hover {
     background: #374151;
 }
+
+/* Botón Volver al Inicio */
+.btn-action.btn-home {
+    background: #2563eb;
+}
+
+.btn-action.btn-home:hover {
+    background: #1d4ed8;
+}
