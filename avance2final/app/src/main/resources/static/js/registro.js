@@ -3,6 +3,13 @@ function initRegistro() {
     const form = document.getElementById('formRegistro');
     if (!form) return;
     
+    // Pre-fill Fecha de registro with today's date
+    const fechaRegistroInput = document.getElementById('fechaRegistro');
+    if (fechaRegistroInput) {
+        const today = new Date().toISOString().split('T')[0];
+        fechaRegistroInput.value = today;
+    }
+    
     // Elementos de radio para tipo de usuario y contenedor de opciones
     const radioCliente = document.getElementById('cliente');
     const radioMotorizado = document.getElementById('motorizado');
