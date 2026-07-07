@@ -104,3 +104,71 @@
     background: #333;
     transform: scale(1.03);
 }
+
+/* Historial de Pedidos */
+.orders-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.order-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    background: #f8fafc;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+}
+
+.order-details {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    color: #334155;
+}
+
+.order-details b {
+    color: #0f172a;
+}
+
+.order-details small {
+    color: #64748b;
+}
+
+.order-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.badge-estado {
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.estado-pendiente { background: #fef3c7; color: #d97706; }
+.estado-preparando { background: #dbeafe; color: #2563eb; }
+.estado-delivery { background: #e0f2fe; color: #0284c7; }
+.estado-entregado { background: #dcfce7; color: #16a34a; }
+.estado-cancelado { background: #fee2e2; color: #dc2626; }
+
+.btn-track {
+    padding: 6px 12px;
+    background: #111827;
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    transition: background 0.2s ease;
+}
+
+.btn-track:hover {
+    background: #374151;
+}

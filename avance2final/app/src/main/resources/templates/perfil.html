@@ -70,6 +70,23 @@
 
     </div>
 
+    <div class="card info history-card" th:if="${not #lists.isEmpty(pedidos)}">
+        <h3>Historial de Pedidos</h3>
+        <div class="orders-list">
+            <div class="order-item" th:each="p : ${pedidos}">
+                <div class="order-details">
+                    <span><b>Pedido #<span th:text="${p.idPedido}"></span></b></span>
+                    <small th:text="${#temporals.format(p.fechaPedido, 'dd/MM/yyyy HH:mm')}"></small>
+                    <span>Total: <b>S/ <span th:text="${p.total}"></span></b></span>
+                </div>
+                <div class="order-actions">
+                    <span th:class="'badge-estado estado-' + ${#strings.toLowerCase(p.estadoPedido)}" th:text="${p.estadoPedido}"></span>
+                    <a th:href="@{/seguimiento(id=${p.idPedido})}" class="btn-track">Seguimiento 🔍</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="acciones">
 
         <a th:href="@{/carrito}" class="btn-action">Ver carrito</a>
