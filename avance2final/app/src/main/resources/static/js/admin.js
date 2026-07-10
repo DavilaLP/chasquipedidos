@@ -25,7 +25,18 @@ async function cargarDatos() {
             fetch("/api/restaurantes").then(r => r.json())
         ]);
 
-        usuariosList = resUsers;
+        // Deduplicar usuarios por correo
+        const uniqueUsers = [];
+        const seenUsers = new Set();
+        resUsers.forEach(u => {
+            const email = (u.correo || "").trim().toLowerCase();
+            if (!seenUsers.has(email)) {
+                seenUsers.add(email);
+                uniqueUsers.push(u);
+            }
+        });
+        usuariosList = uniqueUsers;
+        
         pedidosList = resPedidos;
         
         // Deduplicar motorizados por nombre completo y teléfono al cargar los datos
@@ -40,9 +51,41 @@ async function cargarDatos() {
         });
         motorizadosList = uniqueMots;
         
-        productosList = resProductos;
-        categoriasList = resCategorias;
-        restaurantesList = resRestaurantes;
+        // Deduplicar productos por nombre
+        const uniqueProds = [];
+        const seenProds = new Set();
+        resProductos.forEach(p => {
+            const name = (p.nombre || "").trim().toLowerCase();
+            if (!seenProds.has(name)) {
+                seenProds.add(name);
+                uniqueProds.push(p);
+            }
+        });
+        productosList = uniqueProds;
+        
+        // Deduplicar categorías por nombre
+        const uniqueCats = [];
+        const seenCats = new Set();
+        resCategorias.forEach(c => {
+            const name = (c.nombre || "").trim().toLowerCase();
+            if (!seenCats.has(name)) {
+                seenCats.add(name);
+                uniqueCats.push(c);
+            }
+        });
+        categoriasList = uniqueCats;
+        
+        // Deduplicar restaurantes por nombre
+        const uniqueRests = [];
+        const seenRests = new Set();
+        resRestaurantes.forEach(r => {
+            const name = (r.nombre || "").trim().toLowerCase();
+            if (!seenRests.has(name)) {
+                seenRests.add(name);
+                uniqueRests.push(r);
+            }
+        });
+        restaurantesList = uniqueRests;
 
         actualizarDashboard();
         renderAll();
