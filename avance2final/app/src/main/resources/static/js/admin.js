@@ -27,7 +27,19 @@ async function cargarDatos() {
 
         usuariosList = resUsers;
         pedidosList = resPedidos;
-        motorizadosList = resRepartidores;
+        
+        // Deduplicar motorizados por nombre completo y teléfono al cargar los datos
+        const uniqueMots = [];
+        const seenMots = new Set();
+        resRepartidores.forEach(m => {
+            const key = `${m.nombres.trim().toLowerCase()}|${(m.apellidos || "").trim().toLowerCase()}|${(m.telefono || "").trim().toLowerCase()}`;
+            if (!seenMots.has(key)) {
+                seenMots.add(key);
+                uniqueMots.push(m);
+            }
+        });
+        motorizadosList = uniqueMots;
+        
         productosList = resProductos;
         categoriasList = resCategorias;
         restaurantesList = resRestaurantes;
@@ -191,19 +203,8 @@ function renderMotorizados() {
     solicitudesDiv.innerHTML = "";
     activosDiv.innerHTML = "";
 
-    // Filtrar motorizados duplicados por nombre y teléfono para asegurar visualización única
-    const uniqueMotorizados = [];
-    const seenMotorizados = new Set();
-    motorizadosList.forEach(m => {
-        const key = `${m.nombres.trim().toLowerCase()}|${(m.apellidos || "").trim().toLowerCase()}|${(m.telefono || "").trim().toLowerCase()}`;
-        if (!seenMotorizados.has(key)) {
-            seenMotorizados.add(key);
-            uniqueMotorizados.push(m);
-        }
-    });
-
-    const solicitudes = uniqueMotorizados.filter(m => m.estado === false);
-    const activos = uniqueMotorizados.filter(m => m.estado === true);
+    const solicitudes = motorizadosList.filter(m => m.estado === false);
+    const activos = motorizadosList.filter(m => m.estado === true);
 
     solicitudes.forEach(m => {
         solicitudesDiv.innerHTML += `
