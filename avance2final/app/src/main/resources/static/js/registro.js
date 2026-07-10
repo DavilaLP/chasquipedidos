@@ -10,47 +10,6 @@ function initRegistro() {
         fechaRegistroInput.value = today;
     }
     
-    // Elementos de radio para tipo de usuario y contenedor de opciones
-    const radioCliente = document.getElementById('cliente');
-    const radioMotorizado = document.getElementById('motorizado');
-    const opcionesMotorizado = document.getElementById('opcionesMotorizado');
-    
-    // Configurar la visibilidad del panel de motorizado según la selección
-    if (radioCliente && radioMotorizado) {
-        radioCliente.addEventListener('change', function() {
-            if (this.checked) {
-                opcionesMotorizado.style.display = 'none';
-            }
-        });
-        
-        radioMotorizado.addEventListener('change', function() {
-            if (this.checked) {
-                opcionesMotorizado.style.display = 'block';
-            }
-        });
-    }
-    
-    // Elementos para el tipo de vehículo
-    const radioMoto = document.getElementById('moto');
-    const radioCarro = document.getElementById('carro');
-    const radioBicicleta = document.getElementById('bicicleta');
-    const campoModelo = document.getElementById('campoModelo');
-    
-    // Mostrar campo del modelo del vehículo solo si es moto o carro
-    function toggleCampoModelo() {
-        if (radioMoto && radioCarro) {
-            if (radioMoto.checked || radioCarro.checked) {
-                campoModelo.style.display = 'block';
-            } else {
-                campoModelo.style.display = 'none';
-            }
-        }
-    }
-    
-    if (radioMoto) radioMoto.addEventListener('change', toggleCampoModelo);
-    if (radioCarro) radioCarro.addEventListener('change', toggleCampoModelo);
-    if (radioBicicleta) radioBicicleta.addEventListener('change', toggleCampoModelo);
-    
     // Manejo del evento de envío del formulario
     form.addEventListener('submit', function(event) {
         event.preventDefault(); // Evitar recarga de la página
@@ -72,8 +31,6 @@ function initRegistro() {
                 if (data.success) {
                     mostrarToast('¡Registro exitoso! Ya puedes iniciar sesión', 'success');
                     form.reset();
-                    if (opcionesMotorizado) opcionesMotorizado.style.display = 'none';
-                    if (campoModelo) campoModelo.style.display = 'none';
                     
                     // Opcional: Redirigir al login después de 2 segundos
                     setTimeout(() => {
@@ -145,37 +102,6 @@ function validarFormularioRegistro() {
         isValid = false;
     } else if (telefono) {
         limpiarErrorRegistro('telefono');
-    }
-    
-    const tipoUsuario = document.querySelector('input[name="tipoUsuario"]:checked');
-    if (tipoUsuario && tipoUsuario.value === 'MOTORIZADO') {
-        const tipoVehiculo = document.querySelector('input[name="tipoVehiculo"]:checked');
-        if (!tipoVehiculo) {
-            mostrarErrorRegistro('tipoVehiculo', 'Selecciona un tipo de vehículo');
-            isValid = false;
-        } else {
-            limpiarErrorRegistro('tipoVehiculo');
-        }
-        
-        const licencia = document.querySelector('[name="licencia"]');
-        if (licencia && (!licencia.files || licencia.files.length === 0)) {
-            mostrarErrorRegistro('licencia', 'Debes subir tu licencia');
-            isValid = false;
-        } else if (licencia && licencia.files[0] && licencia.files[0].size > 5 * 1024 * 1024) {
-            mostrarErrorRegistro('licencia', 'La licencia no debe superar los 5MB');
-            isValid = false;
-        } else {
-            limpiarErrorRegistro('licencia');
-        }
-        
-        const tipoVehiculoSeleccionado = tipoVehiculo ? tipoVehiculo.value : null;
-        const modelo = document.querySelector('[name="modeloVehiculo"]');
-        if ((tipoVehiculoSeleccionado === 'MOTO' || tipoVehiculoSeleccionado === 'CARRO') && modelo && modelo.value.trim() === '') {
-            mostrarErrorRegistro('modeloVehiculo', 'Ingresa el modelo de tu vehículo');
-            isValid = false;
-        } else if (modelo) {
-            limpiarErrorRegistro('modeloVehiculo');
-        }
     }
     
     return isValid;

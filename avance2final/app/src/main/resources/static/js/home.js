@@ -1,4 +1,7 @@
 let cart = [];
+let allProducts = [];
+let allCategories = [];
+let activeCategoryName = ""; // Empty string means "Todos"
 
 function addToCart(name, price) {
     const existingItem = cart.find(item => item.name === name);
@@ -119,15 +122,169 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
-const cards = document.querySelectorAll(".restaurant-card");
-cards.forEach(card => {
-    card.addEventListener("mouseenter", () => {
-        card.style.transform = "translateY(-5px) scale(1.01)";
+// --- CARGA DINÁMICA DE PRODUCTOS Y CATEGORÍAS ---
+
+async function fetchCatalogData() {
+    try {
+        // Cargar categorías y productos simultáneamente
+        const [catRes, prodRes] = await Promise.all([
+            fetch('/api/categorias'),
+            fetch('/api/productos')
+        ]);
+        
+        if (catRes.ok) allCategories = await catRes.json();
+        if (prodRes.ok) allProducts = await prodRes.json();
+        
+        renderCategories();
+        renderProducts();
+    } catch (e) {
+        console.error("Error al cargar los datos del catálogo:", e);
+        const grid = document.getElementById('restaurantsGrid');
+        if (grid) {
+            grid.innerHTML = '<div class="card text-center p-4 w-100" style="color: #ef4444; background: rgba(239, 68, 68, 0.1);">Error de conexión al cargar el catálogo de productos.</div>';
+        }
+    }
+}
+
+function renderCategories() {
+    const categoriesList = document.getElementById('categoriesList');
+    if (!categoriesList) return;
+    
+    // Calcular cantidad de productos por categoría (solo productos disponibles)
+    const availableProducts = allProducts.filter(p => p.disponible !== false);
+    
+    let html = `
+        <li>
+            <a href="#" class="cat-link active" data-category="">
+                Todos <span class="count">${availableProducts.length}</span>
+            </a>
+        </li>
+    `;
+    
+    allCategories.forEach(cat => {
+        const prodCount = availableProducts.filter(p => p.categoria && p.categoria.idCategoria === cat.idCategoria).length;
+        html += `
+            <li>
+                <a href="#" class="cat-link" data-category="${cat.nombre}">
+                    ${cat.nombre} <span class="count">${prodCount}</span>
+                </a>
+            </li>
+        `;
     });
-    card.addEventListener("mouseleave", () => {
-        card.style.transform = "translateY(0) scale(1)";
+    
+    categoriesList.innerHTML = html;
+    
+    // Agregar event listeners a las categorías creadas
+    const links = categoriesList.querySelectorAll('.cat-link');
+    links.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            // Quitar clase active
+            links.forEach(l => {
+                l.classList.remove('active');
+                l.style.color = "#cbd5e1";
+                l.style.fontWeight = "400";
+            });
+            
+            link.classList.add('active');
+            link.style.color = "#60a5fa";
+            link.style.fontWeight = "600";
+            
+            activeCategoryName = link.getAttribute('data-category');
+            renderProducts();
+        });
     });
-});
+}
+
+function renderProducts() {
+    const grid = document.getElementById('restaurantsGrid');
+    if (!grid) return;
+    
+    const searchInput = document.getElementById('searchInput');
+    const searchTerm = searchInput ? searchInput.value.toLowerCase().trim() : "";
+    
+    // Filtrar productos
+    let filtered = allProducts.filter(p => p.disponible !== false);
+    
+    // Filtrar por categoría activa
+    if (activeCategoryName) {
+        filtered = filtered.filter(p => p.categoria && p.categoria.nombre.toLowerCase() === activeCategoryName.toLowerCase());
+    }
+    
+    // Filtrar por búsqueda
+    if (searchTerm) {
+        filtered = filtered.filter(p => {
+            const nameMatch = p.nombre.toLowerCase().includes(searchTerm);
+            const descMatch = p.descripcion ? p.descripcion.toLowerCase().includes(searchTerm) : false;
+            const restMatch = p.restaurante ? p.restaurante.nombre.toLowerCase().includes(searchTerm) : false;
+            return nameMatch || descMatch || restMatch;
+        });
+    }
+    
+    if (filtered.length === 0) {
+        grid.innerHTML = '<div class="card text-center p-5 w-100" style="color: #94a3b8; background: rgba(255,255,255,0.05); border: 1px dashed rgba(255,255,255,0.1); border-radius: 12px;">No se encontraron productos en esta sección.</div>';
+        return;
+    }
+    
+    grid.innerHTML = filtered.map(p => {
+        // Imágenes ilustrativas según categoría para no mostrar tarjetas vacías
+        let imgUrl = "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300&h=140&fit=crop"; // default comida
+        
+        const catName = p.categoria ? p.categoria.nombre.toLowerCase() : "";
+        if (catName.includes("pizza")) {
+            imgUrl = "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=300&h=140&fit=crop";
+        } else if (catName.includes("hamburguesa")) {
+            imgUrl = "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=300&h=140&fit=crop";
+        } else if (catName.includes("pollo")) {
+            imgUrl = "https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?w=300&h=140&fit=crop";
+        } else if (catName.includes("bebida")) {
+            imgUrl = "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=300&h=140&fit=crop";
+        } else if (catName.includes("postre") || catName.includes("dulce")) {
+            imgUrl = "https://images.unsplash.com/photo-1551024601-bec78aea704b?w=300&h=140&fit=crop";
+        }
+
+        const restName = p.restaurante ? p.restaurante.nombre : "ChasquiPedidos";
+        const desc = p.descripcion || "Disfruta de la mejor calidad al instante.";
+        
+        return `
+            <div class="restaurant-card">
+                <div class="restaurant-img">
+                    <img src="${imgUrl}" alt="${p.nombre}">
+                    <span class="restaurant-offer">${p.categoria ? p.categoria.nombre : 'Producto'}</span>
+                </div>
+                <div class="restaurant-info">
+                    <div class="restaurant-header">
+                        <h4>${p.nombre}</h4>
+                        <div class="rating">
+                            <span style="font-size: 0.8rem; opacity: 0.8; font-weight: normal; color: #60a5fa;"><i class="fas fa-store"></i> ${restName}</span>
+                        </div>
+                    </div>
+                    <p class="restaurant-desc" style="margin-bottom: 8px; min-height: 40px; font-size: 0.85rem; color: #cbd5e1;">${desc}</p>
+                    <p class="restaurant-desc" style="font-size: 0.75rem;"><i class="fas fa-clock"></i> 20-30 min · <i class="fas fa-box"></i> Stock: ${p.stock}</p>
+                    <div class="restaurant-footer" style="margin-top: 10px;">
+                        <div class="price">S/ ${p.precio.toFixed(2)}</div>
+                        <button class="add-to-cart" onclick="addToCart('${p.nombre.replace(/'/g, "\\'")}', ${p.precio})">
+                            <i class="fas fa-plus"></i> Agregar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join("");
+    
+    // Efectos de transición en hover
+    const cards = document.querySelectorAll(".restaurant-card");
+    cards.forEach(card => {
+        card.style.transition = "transform 0.2s ease, box-shadow 0.2s ease";
+        card.addEventListener("mouseenter", () => {
+            card.style.transform = "translateY(-5px) scale(1.01)";
+        });
+        card.addEventListener("mouseleave", () => {
+            card.style.transform = "translateY(0) scale(1)";
+        });
+    });
+}
 
 // --- BUSCADOR Y FILTRADO EN TIEMPO REAL ---
 document.addEventListener("DOMContentLoaded", () => {
@@ -150,69 +307,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const searchInput = document.getElementById("searchInput");
-    const restaurantCards = document.querySelectorAll(".restaurant-card");
-    const categoryLinks = document.querySelectorAll(".categories-list li a");
-
-    function filterRestaurants() {
-        const searchTerm = searchInput.value.toLowerCase().trim();
-
-        restaurantCards.forEach(card => {
-            const name = card.querySelector(".restaurant-header h4").textContent.toLowerCase();
-            const desc = card.querySelector(".restaurant-desc").textContent.toLowerCase();
-
-            if (name.includes(searchTerm) || desc.includes(searchTerm)) {
-                card.style.display = "block";
-            } else {
-                card.style.display = "none";
-            }
-        });
-    }
-
     if (searchInput) {
-        searchInput.addEventListener("input", filterRestaurants);
+        searchInput.addEventListener("input", renderProducts);
     }
-
-    // Filtrar por categorías del Sidebar
-    categoryLinks.forEach(link => {
-        link.addEventListener("click", (e) => {
-            e.preventDefault();
-            
-            // Quitar estilo activo de otros links y ponerlo en el seleccionado
-            categoryLinks.forEach(l => {
-                l.style.color = "#cbd5e1";
-                l.style.fontWeight = "400";
-            });
-            link.style.color = "#60a5fa";
-            link.style.fontWeight = "600";
-
-            // Obtener texto de la categoría sin el contador numérico
-            const tempNode = link.cloneNode(true);
-            const countBadge = tempNode.querySelector(".count");
-            if (countBadge) countBadge.remove();
-            const categoryText = tempNode.textContent.trim().toLowerCase();
-
-            restaurantCards.forEach(card => {
-                const name = card.querySelector(".restaurant-header h4").textContent.toLowerCase();
-                const desc = card.querySelector(".restaurant-desc").textContent.toLowerCase();
-                
-                let match = false;
-                if (categoryText === "hamburguesas" && (name.includes("burger") || desc.includes("hamburguesa"))) match = true;
-                else if (categoryText === "pizza" && (name.includes("pizza") || desc.includes("pizza"))) match = true;
-                else if (categoryText === "sushi" && (name.includes("sushi") || desc.includes("sushi"))) match = true;
-                else if (categoryText === "pollo" && (name.includes("pollería") || name.includes("pollo") || desc.includes("pollo"))) match = true;
-                else if (categoryText === "tacos" && (name.includes("tacos") || desc.includes("tacos"))) match = true;
-                else if (categoryText === "ensaladas" && (name.includes("salad") || desc.includes("ensalada"))) match = true;
-                else if (categoryText === "pastas" && (name.includes("pastas") || desc.includes("pastas") || desc.includes("tallarines"))) match = true;
-                else if (categoryText === "asiática" && (name.includes("asia") || desc.includes("wok") || desc.includes("chifa") || desc.includes("asiática"))) match = true;
-                
-                if (match) {
-                    card.style.display = "block";
-                } else {
-                    card.style.display = "none";
-                }
-            });
-        });
-    });
+    
+    // Cargar catálogo de base de datos
+    fetchCatalogData();
 });
 
-console.log("Home.js cargado - Carrito y buscador funcionando");
+console.log("home.js dinámico cargado exitosamente");

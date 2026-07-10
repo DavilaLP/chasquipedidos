@@ -81,217 +81,28 @@
                     <div class="sidebar-header">
                         <h5><i class="fas fa-bars"></i> Categorías</h5>
                     </div>
-                    <ul class="categories-list">
-                        <li><a href="#">Hamburguesas</a></li>
-                        <li><a href="#">Pizza <span class="count">18</span></a></li>
-                        <li><a href="#">Sushi <span class="count">12</span></a></li>
-                        <li><a href="#">Pollo <span class="count">15</span></a></li>
-                        <li><a href="#">Tacos <span class="count">10</span></a></li>
-                        <li><a href="#">Ensaladas <span class="count">8</span></a></li>
-                        <li><a href="#">Pastas <span class="count">11</span></a></li>
-                        <li><a href="#">Asiática <span class="count">9</span></a></li>
+                    <ul class="categories-list" id="categoriesList">
+                        <!-- Se cargará dinámicamente -->
                     </ul>
                 </div>
             </aside>
             
             <div class="col-lg-7 col-md-6 restaurants-container">
                 <div class="section-header">
-                    <h2>Restaurantes destacados</h2>
-                    <p>Los mejores sabores a un solo clic</p>
+                    <h2>Nuestros Productos</h2>
+                    <p>Los mejores sabores de Arequipa a un solo clic</p>
                 </div>
                 
-                <!-- Buscador de Restaurantes -->
+                <!-- Buscador de Productos -->
                 <div class="search-filter-container">
                     <div class="search-box">
                         <i class="fas fa-search search-icon"></i>
-                        <input type="text" id="searchInput" placeholder="Buscar tu restaurante o comida favorita..." class="form-control search-input">
+                        <input type="text" id="searchInput" placeholder="Buscar tu producto o comida favorita..." class="form-control search-input">
                     </div>
                 </div>
                 
                 <div class="restaurants-grid" id="restaurantsGrid">
-                    <div class="restaurant-card">
-                        <div class="restaurant-img">
-                            <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=300&h=140&fit=crop" alt="Pizza Hat">
-                            <span class="restaurant-offer">-20%</span>
-                        </div>
-                        <div class="restaurant-info">
-                            <div class="restaurant-header">
-                                <h4>Pizza Hat</h4>
-                                <div class="rating">
-                                    <i class="fas fa-star"></i>
-                                    <span>4.9</span>
-                                </div>
-                            </div>
-                            <p class="restaurant-desc"><i class="fas fa-clock"></i> 20-30 min · <i class="fas fa-motorcycle"></i> Delivery gratis</p>
-                            <div class="restaurant-footer">
-                                <div class="price">S/ 25.00 <span>S/ 35.00</span></div>
-                                <button class="add-to-cart" onclick="addToCart('Pizza Hat', 25)">
-                                    <i class="fas fa-plus"></i> Agregar
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="restaurant-card">
-                        <div class="restaurant-img">
-                            <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=300&h=140&fit=crop" alt="Burger King">
-                            <span class="restaurant-offer">-15%</span>
-                        </div>
-                        <div class="restaurant-info">
-                            <div class="restaurant-header">
-                                <h4>Burger King</h4>
-                                <div class="rating">
-                                    <i class="fas fa-star"></i>
-                                    <span>4.8</span>
-                                </div>
-                            </div>
-                            <p class="restaurant-desc"><i class="fas fa-clock"></i> 15-20 min · <i class="fas fa-motorcycle"></i> Delivery S/ 5.00</p>
-                            <div class="restaurant-footer">
-                                <div class="price">S/ 18.00 <span>S/ 24.00</span></div>
-                                <button class="add-to-cart" onclick="addToCart('Burger King', 18)">
-                                    <i class="fas fa-plus"></i> Agregar
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="restaurant-card">
-                        <div class="restaurant-img">
-                            <img src="https://images.unsplash.com/photo-1559314809-0d155014e29e?w=300&h=140&fit=crop" alt="Sushi Master">
-                            <span class="restaurant-offer">-30%</span>
-                        </div>
-                        <div class="restaurant-info">
-                            <div class="restaurant-header">
-                                <h4>Sushi Master</h4>
-                                <div class="rating">
-                                    <i class="fas fa-star"></i>
-                                    <span>4.9</span>
-                                </div>
-                            </div>
-                            <p class="restaurant-desc"><i class="fas fa-clock"></i> 25-35 min · <i class="fas fa-motorcycle"></i> Delivery gratis</p>
-                            <div class="restaurant-footer">
-                                <div class="price">S/ 42.00 <span>S/ 60.00</span></div>
-                                <button class="add-to-cart" onclick="addToCart('Sushi Master', 42)">
-                                    <i class="fas fa-plus"></i> Agregar
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="restaurant-card">
-                        <div class="restaurant-img">
-                            <img src="https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?w=300&h=140&fit=crop" alt="Pollería El Chasqui">
-                            <span class="restaurant-offer">-25%</span>
-                        </div>
-                        <div class="restaurant-info">
-                            <div class="restaurant-header">
-                                <h4>Pollería El Chasqui</h4>
-                                <div class="rating">
-                                    <i class="fas fa-star"></i>
-                                    <span>4.7</span>
-                                </div>
-                            </div>
-                            <p class="restaurant-desc"><i class="fas fa-clock"></i> 30-40 min · <i class="fas fa-motorcycle"></i> Delivery gratis</p>
-                            <div class="restaurant-footer">
-                                <div class="price">S/ 32.00 <span>S/ 45.00</span></div>
-                                <button class="add-to-cart" onclick="addToCart('Pollería El Chasqui', 32)">
-                                    <i class="fas fa-plus"></i> Agregar
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="restaurant-card">
-                        <div class="restaurant-img">
-                            <img src="https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?w=300&h=140&fit=crop" alt="Tacos México">
-                            <span class="restaurant-offer">-10%</span>
-                        </div>
-                        <div class="restaurant-info">
-                            <div class="restaurant-header">
-                                <h4>Tacos México</h4>
-                                <div class="rating">
-                                    <i class="fas fa-star"></i>
-                                    <span>4.6</span>
-                                </div>
-                            </div>
-                            <p class="restaurant-desc"><i class="fas fa-clock"></i> 20-25 min · <i class="fas fa-motorcycle"></i> Delivery S/ 8.00</p>
-                            <div class="restaurant-footer">
-                                <div class="price">S/ 15.00 <span>S/ 20.00</span></div>
-                                <button class="add-to-cart" onclick="addToCart('Tacos México', 15)">
-                                    <i class="fas fa-plus"></i> Agregar
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="restaurant-card">
-                        <div class="restaurant-img">
-                            <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300&h=140&fit=crop" alt="Green Salad">
-                            <span class="restaurant-offer">-20%</span>
-                        </div>
-                        <div class="restaurant-info">
-                            <div class="restaurant-header">
-                                <h4>Green Salad</h4>
-                                <div class="rating">
-                                    <i class="fas fa-star"></i>
-                                    <span>4.5</span>
-                                </div>
-                            </div>
-                            <p class="restaurant-desc"><i class="fas fa-clock"></i> 15-20 min · <i class="fas fa-motorcycle"></i> Delivery gratis</p>
-                            <div class="restaurant-footer">
-                                <div class="price">S/ 22.00 <span>S/ 28.00</span></div>
-                                <button class="add-to-cart" onclick="addToCart('Green Salad', 22)">
-                                    <i class="fas fa-plus"></i> Agregar
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="restaurant-card">
-                        <div class="restaurant-img">
-                            <img src="https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=300&h=140&fit=crop" alt="Pastas Italianas">
-                            <span class="restaurant-offer">-18%</span>
-                        </div>
-                        <div class="restaurant-info">
-                            <div class="restaurant-header">
-                                <h4>Pastas Italianas</h4>
-                                <div class="rating">
-                                    <i class="fas fa-star"></i>
-                                    <span>4.8</span>
-                                </div>
-                            </div>
-                            <p class="restaurant-desc"><i class="fas fa-clock"></i> 25-35 min · <i class="fas fa-motorcycle"></i> Delivery gratis</p>
-                            <div class="restaurant-footer">
-                                <div class="price">S/ 28.00 <span>S/ 35.00</span></div>
-                                <button class="add-to-cart" onclick="addToCart('Pastas Italianas', 28)">
-                                    <i class="fas fa-plus"></i> Agregar
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="restaurant-card">
-                        <div class="restaurant-img">
-                            <img src="https://images.unsplash.com/photo-1563245372-f21724e3856d?w=300&h=140&fit=crop" alt="Comida Asiática">
-                            <span class="restaurant-offer">-22%</span>
-                        </div>
-                        <div class="restaurant-info">
-                            <div class="restaurant-header">
-                                <h4>Asia Wok</h4>
-                                <div class="rating">
-                                    <i class="fas fa-star"></i>
-                                    <span>4.7</span>
-                                </div>
-                            </div>
-                            <p class="restaurant-desc"><i class="fas fa-clock"></i> 20-30 min · <i class="fas fa-motorcycle"></i> Delivery S/ 6.00</p>
-                            <div class="restaurant-footer">
-                                <div class="price">S/ 35.00 <span>S/ 45.00</span></div>
-                                <button class="add-to-cart" onclick="addToCart('Asia Wok', 35)">
-                                    <i class="fas fa-plus"></i> Agregar
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                    <!-- Se cargará dinámicamente -->
                 </div>
             </div>
             

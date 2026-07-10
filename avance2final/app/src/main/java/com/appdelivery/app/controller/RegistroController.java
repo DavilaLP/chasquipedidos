@@ -40,8 +40,7 @@ public class RegistroController {
             @RequestParam String password,
             @RequestParam String direccion,
             @RequestParam String telefono,
-            @RequestParam String tipoUsuario,
-            @RequestParam(required = false) String tipoVehiculo) {
+            @RequestParam String tipoUsuario) {
 
         // Estructura para almacenar la respuesta JSON
         Map<String, Object> response = new HashMap<>();
@@ -56,17 +55,6 @@ public class RegistroController {
                 apellidos = nombreCompleto.substring(firstSpace + 1);
             }
 
-            // Si el usuario es de tipo MOTORIZADO, se guarda también en la entidad Repartidor
-            if ("MOTORIZADO".equals(tipoUsuario)) {
-                Repartidor repartidor = new Repartidor();
-                repartidor.setNombres(nombres);
-                repartidor.setApellidos(apellidos);
-                repartidor.setTelefono(telefono);
-                repartidor.setVehiculo(tipoVehiculo);
-                repartidor.setEstado(true); // Se marca como activo
-                repartidorRepository.save(repartidor);
-            }
-
             // Se crea y configura el objeto Usuario con los datos recibidos
             Usuario usuario = new Usuario();
             usuario.setNombres(nombres);
@@ -77,7 +65,13 @@ public class RegistroController {
             usuario.setTelefono(telefono);
             usuario.setFechaRegist(LocalDateTime.now()); // Fecha actual de registro
             usuario.setEstado(true); // Usuario activo
-            usuario.setRol("CLIENTE"); // Rol por defecto
+            
+            // Asignar rol según el tipo de usuario seleccionado
+            if ("ADMIN".equals(tipoUsuario)) {
+                usuario.setRol("ADMIN");
+            } else {
+                usuario.setRol("CLIENTE");
+            }
 
             // Guardar el usuario en la base de datos
             usuarioRepository.save(usuario);

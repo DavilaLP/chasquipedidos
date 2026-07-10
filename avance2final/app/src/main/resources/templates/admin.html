@@ -123,8 +123,16 @@
         </section>
 
         <section id="motorizados" class="section">
-            <h2><i class="fas fa-id-card"></i> Solicitudes de Motorizados</h2>
-            <div id="listaMotorizados" class="motorizados-grid"></div>
+            <h2><i class="fas fa-truck-fast"></i> Gestión de Motorizados</h2>
+            <div style="margin-bottom: 1.5rem;">
+                <button onclick="nuevoMotorizado()" style="background: #10b981; border: none; padding: 10px 20px; border-radius: 8px; color: white; cursor: pointer; font-weight: 500; display: inline-flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-plus"></i> Nuevo Motorizado
+                </button>
+            </div>
+            <div>
+                <h3><i class="fas fa-user-clock"></i> Solicitudes Pendientes</h3>
+                <div id="listaMotorizados" class="motorizados-grid"></div>
+            </div>
             <div style="margin-top: 2rem;">
                 <h3><i class="fas fa-check-circle"></i> Motorizados Activos</h3>
                 <div id="activosList" class="motorizados-grid"></div>

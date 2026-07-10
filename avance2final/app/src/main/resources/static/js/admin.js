@@ -284,6 +284,65 @@ async function eliminarMotorizado(id) {
     }
 }
 
+function nuevoMotorizado() {
+    const html = `
+        <form onsubmit="crearMotorizado(event)">
+            <div class="form-group">
+                <label style="color:#334155;">Nombres</label>
+                <input type="text" id="newMotorNom" required style="width:100%; padding:8px; margin-top:4px; border-radius:4px; border:1px solid #cbd5e1; background:#fff; color:#0f172a;">
+            </div>
+            <div class="form-group" style="margin-top:10px;">
+                <label style="color:#334155;">Apellidos</label>
+                <input type="text" id="newMotorApe" required style="width:100%; padding:8px; margin-top:4px; border-radius:4px; border:1px solid #cbd5e1; background:#fff; color:#0f172a;">
+            </div>
+            <div class="form-group" style="margin-top:10px;">
+                <label style="color:#334155;">Teléfono</label>
+                <input type="text" id="newMotorTel" style="width:100%; padding:8px; margin-top:4px; border-radius:4px; border:1px solid #cbd5e1; background:#fff; color:#0f172a;">
+            </div>
+            <div class="form-group" style="margin-top:10px;">
+                <label style="color:#334155;">Vehículo</label>
+                <input type="text" id="newMotorVeh" placeholder="Ej: Motocicleta Honda" style="width:100%; padding:8px; margin-top:4px; border-radius:4px; border:1px solid #cbd5e1; background:#fff; color:#0f172a;">
+            </div>
+            <div class="form-group" style="margin-top:10px;">
+                <label style="color:#334155;">Placa</label>
+                <input type="text" id="newMotorPla" placeholder="Ej: M156-XP" style="width:100%; padding:8px; margin-top:4px; border-radius:4px; border:1px solid #cbd5e1; background:#fff; color:#0f172a;">
+            </div>
+            <button type="submit" style="width: 100%; justify-content: center; margin-top: 15px; padding: 10px; background: #10b981; border: none; color: white; border-radius: 6px; font-weight: 500; cursor: pointer;">Crear Motorizado</button>
+        </form>
+    `;
+    mostrarModal("Nuevo Motorizado", html);
+}
+
+async function crearMotorizado(e) {
+    e.preventDefault();
+    const payload = {
+        nombres: document.getElementById("newMotorNom").value,
+        apellidos: document.getElementById("newMotorApe").value,
+        telefono: document.getElementById("newMotorTel").value,
+        vehiculo: document.getElementById("newMotorVeh").value,
+        placa: document.getElementById("newMotorPla").value,
+        estado: true
+    };
+
+    try {
+        const response = await fetch(`/api/repartidores`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        });
+
+        if (response.ok) {
+            cargarDatos();
+            closeModal();
+            mostrarModal("Éxito", "Motorizado creado correctamente.");
+        } else {
+            alert("Error al crear motorizado");
+        }
+    } catch (err) {
+        console.error(err);
+    }
+}
+
 function editarMotorizado(id) {
     const m = motorizadosList.find(r => r.idRepartidor === id);
     if (!m) return;

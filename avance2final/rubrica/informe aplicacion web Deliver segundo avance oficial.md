@@ -393,18 +393,19 @@ Permite al administrador gestionar la plataforma. Desde esta vista se pueden rea
 Las interfaces de la aplicación web **ChasquiPedidos** se han diseñado de manera interactiva y responsive utilizando **HTML5**, **Bootstrap** para el diseño de componentes modernos (tarjetas, tablas, formularios, barras de estado) y **JavaScript (Vanilla)** para consumir y procesar peticiones asíncronas con el backend.
 
 ### 7.2.1. Vista Principal del Catálogo (`index.html`)
-*   **Descripción:** Es la pantalla de inicio del usuario autenticado. Presenta un banner interactivo con la marca, una barra de navegación con enlaces a su perfil y carrito, y una sección principal con las tarjetas (cards) de los productos y restaurantes.
+*   **Descripción:** Es la pantalla de inicio del usuario autenticado. Presenta un banner interactivo con la marca, una barra de navegación con enlaces a su perfil y carrito, y una sección principal que carga y renderiza dinámicamente los productos y categorías almacenados en la base de datos.
 *   **Componentes Clave:** 
-    *   Filtros dinámicos por categorías (ej. Postres, Comida Rápida, Bebidas).
-    *   Buscador interactivo en tiempo real.
-    *   Botón "Agregar al carrito" en cada tarjeta de producto que invoca llamadas de JS para guardar el estado del carrito de compras.
+    *   Carga asíncrona de productos (`GET /api/productos`) y categorías (`GET /api/categorias`) mediante Fetch API de JavaScript.
+    *   Filtros dinámicos interactivos por categorías de la base de datos con visualización del conteo de productos disponibles por categoría en tiempo real.
+    *   Buscador interactivo en tiempo real que filtra productos por nombre, descripción o restaurante sin recargar la página.
+    *   Botón "Agregar al carrito" en cada tarjeta de producto que gestiona localmente los ítems seleccionados.
 
 ### 7.2.2. Vista de Registro (`registro.html`)
-*   **Descripción:** Permite a los clientes y nuevos motorizados registrarse en la plataforma.
+*   **Descripción:** Permite a los clientes y nuevos administradores registrarse en la plataforma de manera segura.
 *   **Componentes Clave:** 
     *   Campos para Nombre Completo, Correo, Contraseña, Teléfono y Dirección.
-    *   Selector de Rol (`CLIENTE` o `MOTORIZADO`).
-    *   Script `registro.js` que captura el submit, valida localmente los campos obligatorios, y realiza un envío mediante `fetch` POST al endpoint de registro.
+    *   Selector de Rol (`CLIENTE` o `ADMIN`), asignando los privilegios de seguridad correspondientes en el backend.
+    *   Script `registro.js` que captura el submit, valida localmente los campos obligatorios y realiza un envío mediante `fetch` POST al endpoint de registro público.
 
 ### 7.2.3. Vista del Carrito de Compras (`carrito.html`)
 *   **Descripción:** Muestra los ítems que el usuario ha seleccionado para comprar.
@@ -445,6 +446,7 @@ Las interfaces de la aplicación web **ChasquiPedidos** se han diseñado de mane
     *   **CRUD de Usuarios:** Listar, visualizar detalles, editar nombres, apellidos, correo, teléfono, dirección, estado y eliminar usuarios reales de la base de datos MySQL.
     *   **CRUD de Productos:** Listar, buscar en tiempo real, crear nuevos productos (asociados a un restaurante y categoría), editar y eliminar productos reales.
     *   **CRUD de Categorías:** Listar, agregar nuevas categorías, editar y eliminar categorías reales.
+    *   **Gestión y Registro de Motorizados:** Creación directa de repartidores activos mediante un formulario modal, edición de detalles, visualización y eliminación en caliente.
     *   **Gestión de Pedidos:** Listar pedidos reales de la base de datos, cambiar su estado de preparación y delivery (`Pendiente`, `Preparando pedido`, `En delivery`, `Entregado`) y asignar repartidores activos.
 
 ---
