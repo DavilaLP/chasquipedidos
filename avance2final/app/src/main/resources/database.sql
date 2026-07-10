@@ -91,6 +91,17 @@ CREATE TABLE DETALLE_PEDIDO (
 -- 9. Datos de Prueba Iniciales (Seed Data)
 -- ==========================================
 
+-- Limpiar tablas antes de insertar para evitar duplicados al re-ejecutar el script
+SET FOREIGN_KEY_CHECKS = 0;
+TRUNCATE TABLE DETALLE_PEDIDO;
+TRUNCATE TABLE PEDIDO;
+TRUNCATE TABLE PRODUCTO;
+TRUNCATE TABLE CATEGORIA_PRODUCTO;
+TRUNCATE TABLE RESTAURANTE;
+TRUNCATE TABLE REPARTIDOR;
+TRUNCATE TABLE USUARIO;
+SET FOREIGN_KEY_CHECKS = 1;
+
 -- 9.1. Insertar Categorías
 INSERT INTO CATEGORIA_PRODUCTO (nombre, descripcion) VALUES
 ('Pizzas', 'Pizzas artesanales de diversos sabores'),

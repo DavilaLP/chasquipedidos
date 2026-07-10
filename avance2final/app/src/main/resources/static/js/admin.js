@@ -191,8 +191,19 @@ function renderMotorizados() {
     solicitudesDiv.innerHTML = "";
     activosDiv.innerHTML = "";
 
-    const solicitudes = motorizadosList.filter(m => m.estado === false);
-    const activos = motorizadosList.filter(m => m.estado === true);
+    // Filtrar motorizados duplicados por nombre y teléfono para asegurar visualización única
+    const uniqueMotorizados = [];
+    const seenMotorizados = new Set();
+    motorizadosList.forEach(m => {
+        const key = `${m.nombres.trim().toLowerCase()}|${(m.apellidos || "").trim().toLowerCase()}|${(m.telefono || "").trim().toLowerCase()}`;
+        if (!seenMotorizados.has(key)) {
+            seenMotorizados.add(key);
+            uniqueMotorizados.push(m);
+        }
+    });
+
+    const solicitudes = uniqueMotorizados.filter(m => m.estado === false);
+    const activos = uniqueMotorizados.filter(m => m.estado === true);
 
     solicitudes.forEach(m => {
         solicitudesDiv.innerHTML += `

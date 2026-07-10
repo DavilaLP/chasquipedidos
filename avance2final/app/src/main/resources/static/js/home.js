@@ -153,6 +153,17 @@ function renderCategories() {
     // Calcular cantidad de productos por categoría (solo productos disponibles)
     const availableProducts = allProducts.filter(p => p.disponible !== false);
     
+    // Filtrar categorías duplicadas por nombre para asegurar que la barra lateral no se repita
+    const uniqueCategories = [];
+    const seenCategories = new Set();
+    allCategories.forEach(cat => {
+        const normName = cat.nombre.trim().toLowerCase();
+        if (!seenCategories.has(normName)) {
+            seenCategories.add(normName);
+            uniqueCategories.push(cat);
+        }
+    });
+    
     let html = `
         <li>
             <a href="#" class="cat-link active" data-category="">
@@ -161,8 +172,9 @@ function renderCategories() {
         </li>
     `;
     
-    allCategories.forEach(cat => {
-        const prodCount = availableProducts.filter(p => p.categoria && p.categoria.idCategoria === cat.idCategoria).length;
+    uniqueCategories.forEach(cat => {
+        // Contar productos que tengan el mismo nombre de categoría (independientemente del ID)
+        const prodCount = availableProducts.filter(p => p.categoria && p.categoria.nombre.trim().toLowerCase() === cat.nombre.trim().toLowerCase()).length;
         html += `
             <li>
                 <a href="#" class="cat-link" data-category="${cat.nombre}">
@@ -221,6 +233,18 @@ function renderProducts() {
             return nameMatch || descMatch || restMatch;
         });
     }
+
+    // Filtrar productos duplicados por nombre
+    const uniqueFiltered = [];
+    const seenProductNames = new Set();
+    filtered.forEach(p => {
+        const normName = p.nombre.trim().toLowerCase();
+        if (!seenProductNames.has(normName)) {
+            seenProductNames.add(normName);
+            uniqueFiltered.push(p);
+        }
+    });
+    filtered = uniqueFiltered;
     
     if (filtered.length === 0) {
         grid.innerHTML = '<div class="card text-center p-5 w-100" style="color: #94a3b8; background: rgba(255,255,255,0.05); border: 1px dashed rgba(255,255,255,0.1); border-radius: 12px;">No se encontraron productos en esta sección.</div>';
