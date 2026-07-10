@@ -280,13 +280,16 @@ function renderProducts() {
             imgUrl = "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=300&h=140&fit=crop";
         }
 
+        const isProductIcon = prodName.includes("pollo") || prodName.includes("kola") || prodName.includes("cola") || catName.includes("bebida");
+        const imgClass = isProductIcon ? "class='contain-fit'" : "";
+
         const restName = p.restaurante ? p.restaurante.nombre : "ChasquiPedidos";
         const desc = p.descripcion || "Disfruta de la mejor calidad al instante.";
         
         return `
             <div class="restaurant-card">
                 <div class="restaurant-img">
-                    <img src="${imgUrl}" alt="${p.nombre}">
+                    <img src="${imgUrl}" alt="${p.nombre}" ${imgClass}>
                     <span class="restaurant-offer">${p.categoria ? p.categoria.nombre : 'Producto'}</span>
                 </div>
                 <div class="restaurant-info">

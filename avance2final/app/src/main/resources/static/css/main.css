@@ -182,6 +182,12 @@
     transition: transform 0.3s;
 }
 
+.restaurant-img img.contain-fit {
+    object-fit: contain;
+    background-color: #ffffff;
+    padding: 6px; /* Padding interno para alejar la imagen de los bordes y que se vea completa */
+}
+
 .restaurant-card:hover .restaurant-img img {
     transform: scale(1.05);
 }
