@@ -253,16 +253,27 @@ function renderProducts() {
     }
     
     grid.innerHTML = filtered.map(p => {
-        // Imágenes ilustrativas según categoría para no mostrar tarjetas vacías
+        // Imágenes ilustrativas según categoría o producto específico
         let imgUrl = "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300&h=140&fit=crop"; // default comida
         
+        const prodName = p.nombre.toLowerCase();
         const catName = p.categoria ? p.categoria.nombre.toLowerCase() : "";
-        if (catName.includes("pizza")) {
+        
+        // Mapeo específico por nombre de producto solicitado por el usuario
+        if (prodName.includes("1/4") && prodName.includes("pollo")) {
+            imgUrl = "https://droman.com.pe/wp-content/uploads/2024/12/Captura-de-pantalla-2024-12-15-173303.png";
+        } else if (prodName.includes("1/2") && prodName.includes("pollo")) {
+            imgUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQNKbjMHVYqbEzFQUn3AeLkjtgkPfb77r_svG-WqZsJA&s=10";
+        } else if (prodName.includes("inka") && prodName.includes("kola")) {
+            imgUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZLsQ6MSdYOsv8UMBHUtRcHshrAw4Bcml4pT7NZQkkWQ&s=10"; // Inka Kola 1.5L
+        } else if (prodName.includes("coca") && prodName.includes("cola")) {
+            imgUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSWG5ntNa_RJLHCRr_VNnoo5cOzHZctQQfEjuzb2is3g&s"; // Coca-Cola
+        } else if (catName.includes("pizza")) {
             imgUrl = "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=300&h=140&fit=crop";
         } else if (catName.includes("hamburguesa")) {
             imgUrl = "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=300&h=140&fit=crop";
         } else if (catName.includes("pollo")) {
-            imgUrl = "https://images.unsplash.com/photo-1598515214211-89d3e73ae83b?w=300&h=140&fit=crop";
+            imgUrl = "https://images.unsplash.com/photo-1598103442097-8b74394b98c6?w=300&h=140&fit=crop";
         } else if (catName.includes("bebida")) {
             imgUrl = "https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=300&h=140&fit=crop";
         } else if (catName.includes("postre") || catName.includes("dulce")) {
