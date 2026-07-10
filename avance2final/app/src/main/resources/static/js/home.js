@@ -133,7 +133,20 @@ async function fetchCatalogData() {
         ]);
         
         if (catRes.ok) allCategories = await catRes.json();
-        if (prodRes.ok) allProducts = await prodRes.json();
+        if (prodRes.ok) {
+            const rawProducts = await prodRes.json();
+            // Deduplicar productos por nombre a nivel de datos para sincronizar los contadores
+            const uniqueProds = [];
+            const seenNames = new Set();
+            rawProducts.forEach(p => {
+                const normName = p.nombre.trim().toLowerCase();
+                if (!seenNames.has(normName)) {
+                    seenNames.add(normName);
+                    uniqueProds.push(p);
+                }
+            });
+            allProducts = uniqueProds;
+        }
         
         renderCategories();
         renderProducts();
@@ -234,18 +247,6 @@ function renderProducts() {
         });
     }
 
-    // Filtrar productos duplicados por nombre
-    const uniqueFiltered = [];
-    const seenProductNames = new Set();
-    filtered.forEach(p => {
-        const normName = p.nombre.trim().toLowerCase();
-        if (!seenProductNames.has(normName)) {
-            seenProductNames.add(normName);
-            uniqueFiltered.push(p);
-        }
-    });
-    filtered = uniqueFiltered;
-    
     if (filtered.length === 0) {
         grid.innerHTML = '<div class="card text-center p-5 w-100" style="color: #94a3b8; background: rgba(255,255,255,0.05); border: 1px dashed rgba(255,255,255,0.1); border-radius: 12px;">No se encontraron productos en esta sección.</div>';
         return;
@@ -259,13 +260,13 @@ function renderProducts() {
         if (catName.includes("pizza")) {
             imgUrl = "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=300&h=140&fit=crop";
         } else if (catName.includes("hamburguesa")) {
-            imgUrl = "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=300&h=140&fit=crop";
+            imgUrl = "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=300&h=140&fit=crop";
         } else if (catName.includes("pollo")) {
-            imgUrl = "https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?w=300&h=140&fit=crop";
+            imgUrl = "https://images.unsplash.com/photo-1598515214211-89d3e73ae83b?w=300&h=140&fit=crop";
         } else if (catName.includes("bebida")) {
-            imgUrl = "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=300&h=140&fit=crop";
+            imgUrl = "https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=300&h=140&fit=crop";
         } else if (catName.includes("postre") || catName.includes("dulce")) {
-            imgUrl = "https://images.unsplash.com/photo-1551024601-bec78aea704b?w=300&h=140&fit=crop";
+            imgUrl = "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=300&h=140&fit=crop";
         }
 
         const restName = p.restaurante ? p.restaurante.nombre : "ChasquiPedidos";
