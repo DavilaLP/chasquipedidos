@@ -23,6 +23,11 @@ public class SecurityInterceptor implements HandlerInterceptor {
                 return true;
             }
             
+            // Permitir lectura pública de categorías para el catálogo principal
+            if (uri.startsWith("/api/categorias") && "GET".equalsIgnoreCase(request.getMethod())) {
+                return true;
+            }
+            
             if (usuario == null) {
                 response.sendRedirect("/login");
                 return false;

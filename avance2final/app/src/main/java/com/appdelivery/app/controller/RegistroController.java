@@ -39,8 +39,7 @@ public class RegistroController {
             @RequestParam String email,
             @RequestParam String password,
             @RequestParam String direccion,
-            @RequestParam String telefono,
-            @RequestParam String tipoUsuario) {
+            @RequestParam String telefono) {
 
         // Estructura para almacenar la respuesta JSON
         Map<String, Object> response = new HashMap<>();
@@ -66,12 +65,8 @@ public class RegistroController {
             usuario.setFechaRegist(LocalDateTime.now()); // Fecha actual de registro
             usuario.setEstado(true); // Usuario activo
             
-            // Asignar rol según el tipo de usuario seleccionado
-            if ("ADMIN".equals(tipoUsuario)) {
-                usuario.setRol("ADMIN");
-            } else {
-                usuario.setRol("CLIENTE");
-            }
+            // Todos los registros públicos son de tipo CLIENTE por defecto
+            usuario.setRol("CLIENTE");
 
             // Guardar el usuario en la base de datos
             usuarioRepository.save(usuario);
