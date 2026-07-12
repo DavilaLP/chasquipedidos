@@ -141,7 +141,7 @@ La solución adopta un patrón arquitectónico de **3 Capas (Modelo-Vista-Contro
 * Registro e inicio de sesión seguro en el backend.
 * Catálogo dinámico consumiendo base de datos y barra lateral interactiva con conteo automático de platos.
 * Carrito de compras guardado en `localStorage` y procesamiento de orden contra entrega.
-* Panel administrativo dinámico con alta, baja, modificación y consulta (CRUD) de Productos, Categorías, Repartidores y Usuarios.
+* Panel administrativo limpio y dinámico con alta, baja, modificación y consulta (CRUD) de Productos, Categorías, Repartidores y Usuarios. (Se eliminaron módulos genéricos sin uso como Quejas para mantener la solidez).
 * Generación automática de reportes PDF y Excel al vuelo.
 
 ### 6.2. Limitaciones del Proyecto
@@ -415,13 +415,9 @@ public class SecurityInterceptor implements HandlerInterceptor {
                 return true;
             }
             
-            if (usuario == null) {
-                response.sendRedirect("/login");
-                return false;
-            }
-            
-            if (!"ADMIN".equalsIgnoreCase(usuario.getRol())) {
-                response.sendError(HttpServletResponse.SC_FORBIDDEN, "Acceso denegado: Se requiere rol de Administrador");
+            if (usuario == null || !"ADMIN".equalsIgnoreCase(usuario.getRol())) {
+                // Se devuelve 404 en lugar de 403 o redirección para ocultar las rutas admin a intrusos
+                response.sendError(HttpServletResponse.SC_NOT_FOUND);
                 return false;
             }
         }
@@ -441,6 +437,9 @@ public class SecurityInterceptor implements HandlerInterceptor {
 
 ### 11.3. Exclusión de Recursos y Rutas Públicas (Lectura como Invitado)
 El interceptor está configurado en `WebConfig` para ignorar archivos estáticos (`/css/**`, `/js/**`, `/images/**`) y rutas generales de inicio (`/`, `/login`, `/registro`). Además, se excluyeron específicamente las peticiones de lectura `GET` de `/api/categorias` y `/api/productos` para que los clientes invitados puedan visualizar el catálogo libremente antes de loguearse.
+
+### 11.4. Página de Error Personalizada (404)
+Como medida de seguridad adicional y mejora de la experiencia de usuario (UX), si un cliente o usuario no logueado intenta forzar el acceso a las rutas `/admin`, el sistema intercepta la petición y devuelve un error 404 que renderiza automáticamente una vista personalizada `error/404.html`. Esta vista cuenta con un diseño profesional que indica que no se poseen los permisos adecuados o la página no existe, evitando mostrar la clásica "Whitelabel Error Page" de Spring Boot y previniendo fugas de información (information disclosure) sobre la estructura de rutas reales del servidor.
 
 ---
 
@@ -547,12 +546,17 @@ public void exportarPedidosPDF(HttpServletResponse response) throws IOException 
 ### 13.2. Generación de Excel Dinámico (Biblioteca Apache POI)
 Para análisis detallados de inventario y pedidos, el sistema genera libros de cálculo XLSX interactivos mediante **Apache POI**. El controlador formatea automáticamente las celdas, crea cabeceras con color e invoca el ajuste automático de columnas (`autoSizeColumn`) antes de escribir al flujo HTTP de descarga.
 
-### 13.3. Controladores y Descarga del Lado del Cliente
-Los botones de descarga se encuentran integrados en la pestaña principal del Dashboard del Administrador (`admin.html`), apuntando directamente a los endpoints `/admin/reportes/pedidos/pdf`, `/admin/reportes/pedidos/excel`, `/admin/reportes/usuarios/pdf` y `/admin/reportes/usuarios/excel` para ejecutar la descarga directa del archivo con un solo clic.
+### 13.3. Características Avanzadas de Reportes (Filtros, Marcas de Tiempo y Depuración)
+* **Marcas de Tiempo Dinámicas:** Tanto los reportes en PDF como en Excel incorporan automáticamente la fecha y hora exacta de descarga en la esquina superior derecha (`Generado el: dd/MM/yyyy HH:mm:ss`), proporcionando trazabilidad temporal a las exportaciones.
+* **Respeto de Filtros Activos:** En la sección de Productos, se ha implementado un botón desplegable interactivo. Al exportar, el frontend captura el texto de la barra de búsqueda y lo envía al backend (`?buscar=`), garantizando que el PDF o Excel contenga exactamente la lista filtrada que el administrador está visualizando en pantalla.
+* **Deduplicación en el Servidor:** La lógica de exportación en `ReporteController.java` cuenta con un proceso iterativo de depuración (utilizando un `HashSet` en Java) que remueve de manera eficaz productos duplicados por nombre antes de exportarlos, asegurando la consistencia absoluta de los datos.
+
+### 13.4. Controladores y Descarga del Lado del Cliente
+Los botones de descarga se encuentran integrados estratégicamente en el Dashboard del Administrador (`admin.html`). Para Usuarios y Pedidos se ubican en el resumen general, mientras que para los Productos se encuentra un botón "Exportar Productos" tipo Dropdown interactivo directamente en la pestaña de gestión de inventario.
 
 ---
 
-## 14. 📈 DINAMIZACIÓN DEL DASHBOARD ADMINISTRATIVO
+## 14. 📈 DINAMIZACIÓN Y LIMPIEZA DEL DASHBOARD ADMINISTRATIVO
 
 Las métricas del panel de administración se calculan en caliente desde la base de datos MySQL. En `AdminController.java`, se inyectan las interfaces repositorio y se calculan los acumulados totales:
 ```java
@@ -580,11 +584,11 @@ public String adminPanel(Model model, HttpSession session) {
 
 Al momento de defender tu proyecto ante el jurado, te recomendamos estructurar tu exposición en base a estos 4 momentos clave:
 
-1. **Momento 1: Demostración de Seguridad por Roles (Paso Crítico)**
+1. **Momento 1: Demostración de Seguridad por Roles y Páginas de Error (Paso Crítico)**
    * Abre una ventana de incógnito en tu navegador e intenta acceder a `http://localhost:8080/admin`.
-   * **Qué mostrar:** Demuestra que el sistema te bloquea y te redirige a `/login` porque eres un usuario no autenticado.
-   * **Siguiente paso:** Inicia sesión con la cuenta de Cliente (`juan@gmail.com` / `123456`) e intenta forzar la barra de direcciones para entrar a `/admin`. Demuestra el error **HTTP 403 Access Denied**.
-   * **Concepto a mencionar:** *HandlerInterceptor* de Spring MVC para control de accesos centralizado.
+   * **Qué mostrar:** Demuestra que el sistema te intercepta y muestra la **Página de Error 404 personalizada** que indica falta de permisos.
+   * **Siguiente paso:** Inicia sesión con la cuenta de Cliente (`juan@gmail.com` / `123456`) e intenta forzar la barra de direcciones para entrar a `/admin`. Demuestra nuevamente cómo la arquitectura te prohíbe el acceso sin mostrar feas trazas de error.
+   * **Concepto a mencionar:** *HandlerInterceptor* de Spring MVC para control de accesos centralizado, devolviendo código HTTP 404 para ocultar rutas sensibles (security by obscurity).
 
 2. **Momento 2: Estadísticas del Dashboard y Carga Dinámica**
    * Cierra sesión e ingresa como Administrador (`cristofer@gmail.com` / `123456`).
