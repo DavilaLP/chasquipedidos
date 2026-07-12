@@ -664,6 +664,22 @@ function exportarProductos(formato) {
     window.location.href = url;
 }
 
+function toggleDropdown(event) {
+    const menu = document.getElementById('exportDropdownMenu');
+    if (menu) {
+        menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+    }
+    event.stopPropagation();
+}
+
+document.addEventListener('click', function(event) {
+    const menu = document.getElementById('exportDropdownMenu');
+    const container = document.getElementById('exportDropdownContainer');
+    if (menu && menu.style.display === 'block' && container && !container.contains(event.target)) {
+        menu.style.display = 'none';
+    }
+});
+
 function nuevoProducto() {
     let restOpts = "";
     restaurantesList.forEach(r => {

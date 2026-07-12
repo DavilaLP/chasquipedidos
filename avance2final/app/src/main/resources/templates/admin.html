@@ -157,13 +157,13 @@
                         <i class="fas fa-plus"></i> Nuevo Producto
                     </button>
                     
-                    <div style="position: relative; display: inline-block;" onmouseover="this.querySelector('.dropdown-content').style.display='block'" onmouseout="this.querySelector('.dropdown-content').style.display='none'">
-                        <button style="background: #3b82f6; border: none; padding: 10px 20px; border-radius: 8px; color: white; cursor: pointer; font-weight: 500; display: inline-flex; align-items: center; gap: 8px;">
+                    <div style="position: relative; display: inline-block;" id="exportDropdownContainer">
+                        <button onclick="toggleDropdown(event)" style="background: #3b82f6; border: none; padding: 10px 20px; border-radius: 8px; color: white; cursor: pointer; font-weight: 500; display: inline-flex; align-items: center; gap: 8px;">
                             <i class="fas fa-download"></i> Exportar Productos <i class="fas fa-caret-down"></i>
                         </button>
-                        <div class="dropdown-content" style="display: none; position: absolute; background-color: #1f2937; min-width: 170px; box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.5); z-index: 10; border-radius: 8px; overflow: hidden; top: 100%; left: 0; border: 1px solid rgba(255,255,255,0.1); margin-top: 5px;">
-                            <a href="#" onclick="exportarProductos('pdf'); return false;" style="color: white; padding: 12px 16px; text-decoration: none; display: block; border-bottom: 1px solid rgba(255,255,255,0.05); transition: background 0.3s;"><i class="fas fa-file-pdf" style="color: #ef4444; width: 20px;"></i> PDF</a>
-                            <a href="#" onclick="exportarProductos('excel'); return false;" style="color: white; padding: 12px 16px; text-decoration: none; display: block; transition: background 0.3s;"><i class="fas fa-file-excel" style="color: #10b981; width: 20px;"></i> Excel (.xlsx)</a>
+                        <div id="exportDropdownMenu" class="dropdown-content" style="display: none; position: absolute; background-color: #1f2937; min-width: 170px; box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.5); z-index: 10; border-radius: 8px; overflow: hidden; top: 100%; left: 0; border: 1px solid rgba(255,255,255,0.1); margin-top: 5px;">
+                            <a href="#" onclick="exportarProductos('pdf'); document.getElementById('exportDropdownMenu').style.display='none'; return false;" style="color: white; padding: 12px 16px; text-decoration: none; display: block; border-bottom: 1px solid rgba(255,255,255,0.05); transition: background 0.3s;"><i class="fas fa-file-pdf" style="color: #ef4444; width: 20px;"></i> PDF</a>
+                            <a href="#" onclick="exportarProductos('excel'); document.getElementById('exportDropdownMenu').style.display='none'; return false;" style="color: white; padding: 12px 16px; text-decoration: none; display: block; transition: background 0.3s;"><i class="fas fa-file-excel" style="color: #10b981; width: 20px;"></i> Excel (.xlsx)</a>
                         </div>
                     </div>
                 </div>

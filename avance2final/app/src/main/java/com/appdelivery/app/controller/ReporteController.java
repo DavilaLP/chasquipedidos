@@ -242,7 +242,18 @@ public class ReporteController {
         response.setContentType("application/pdf");
         response.setHeader("Content-Disposition", "attachment; filename=reporte_productos.pdf");
 
-        List<Producto> productos = productoRepository.findAll();
+        List<Producto> todosProductos = productoRepository.findAll();
+        List<Producto> productosUnicos = new java.util.ArrayList<>();
+        java.util.Set<String> nombresVistos = new java.util.HashSet<>();
+        for (Producto p : todosProductos) {
+            String nombre = p.getNombre() != null ? p.getNombre().trim().toLowerCase() : "";
+            if (!nombresVistos.contains(nombre)) {
+                nombresVistos.add(nombre);
+                productosUnicos.add(p);
+            }
+        }
+        List<Producto> productos = productosUnicos;
+
         if (buscar != null && !buscar.trim().isEmpty()) {
             String buscarLower = buscar.toLowerCase().trim();
             productos = productos.stream()
@@ -306,7 +317,18 @@ public class ReporteController {
         response.setContentType("application/octet-stream");
         response.setHeader("Content-Disposition", "attachment; filename=reporte_productos.xlsx");
 
-        List<Producto> productos = productoRepository.findAll();
+        List<Producto> todosProductos = productoRepository.findAll();
+        List<Producto> productosUnicos = new java.util.ArrayList<>();
+        java.util.Set<String> nombresVistos = new java.util.HashSet<>();
+        for (Producto p : todosProductos) {
+            String nombre = p.getNombre() != null ? p.getNombre().trim().toLowerCase() : "";
+            if (!nombresVistos.contains(nombre)) {
+                nombresVistos.add(nombre);
+                productosUnicos.add(p);
+            }
+        }
+        List<Producto> productos = productosUnicos;
+
         if (buscar != null && !buscar.trim().isEmpty()) {
             String buscarLower = buscar.toLowerCase().trim();
             productos = productos.stream()
