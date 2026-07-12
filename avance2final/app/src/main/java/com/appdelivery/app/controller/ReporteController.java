@@ -57,6 +57,12 @@ public class ReporteController {
         Font fontBody = FontFactory.getFont(FontFactory.HELVETICA);
         fontBody.setSize(10);
 
+        // Fecha de generación
+        String fechaActual = java.time.LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"));
+        Paragraph dateParagraph = new Paragraph("Generado el: " + fechaActual, fontBody);
+        dateParagraph.setAlignment(Paragraph.ALIGN_RIGHT);
+        document.add(dateParagraph);
+
         // Título del documento
         Paragraph paragraph = new Paragraph("Reporte de Pedidos - ChasquiPedidos", fontTitle);
         paragraph.setAlignment(Paragraph.ALIGN_CENTER);
@@ -123,9 +129,20 @@ public class ReporteController {
             headerFont.setBold(true);
             headerStyle.setFont(headerFont);
 
-            // Crear cabecera
-            Row headerRow = sheet.createRow(0);
             String[] columns = {"ID Pedido", "Cliente", "Fecha", "Direccion Entrega", "Metodo Pago", "Estado Pedido", "Total (S/)"};
+
+            // Fila para la fecha de generación
+            Row dateRow = sheet.createRow(0);
+            String fechaActual = java.time.LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"));
+            Cell dateCell = dateRow.createCell(columns.length - 1);
+            dateCell.setCellValue("Generado el: " + fechaActual);
+            
+            CellStyle dateStyle = workbook.createCellStyle();
+            dateStyle.setAlignment(HorizontalAlignment.RIGHT);
+            dateCell.setCellStyle(dateStyle);
+
+            // Crear cabecera
+            Row headerRow = sheet.createRow(1);
             for (int i = 0; i < columns.length; i++) {
                 Cell cell = headerRow.createCell(i);
                 cell.setCellValue(columns[i]);
@@ -133,7 +150,7 @@ public class ReporteController {
             }
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-            int rowNum = 1;
+            int rowNum = 2;
             for (Pedido pedido : pedidos) {
                 Row row = sheet.createRow(rowNum++);
                 row.createCell(0).setCellValue(pedido.getIdPedido());
@@ -176,6 +193,11 @@ public class ReporteController {
 
         Font fontBody = FontFactory.getFont(FontFactory.HELVETICA);
         fontBody.setSize(9);
+
+        String fechaActual = java.time.LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"));
+        Paragraph dateParagraph = new Paragraph("Generado el: " + fechaActual, fontBody);
+        dateParagraph.setAlignment(Paragraph.ALIGN_RIGHT);
+        document.add(dateParagraph);
 
         Paragraph paragraph = new Paragraph("Reporte de Usuarios - ChasquiPedidos", fontTitle);
         paragraph.setAlignment(Paragraph.ALIGN_CENTER);
@@ -226,15 +248,26 @@ public class ReporteController {
             headerFont.setBold(true);
             headerStyle.setFont(headerFont);
 
-            Row headerRow = sheet.createRow(0);
             String[] columns = {"ID", "Nombres", "Apellidos", "Correo", "Telefono", "Direccion", "Rol", "Estado"};
+
+            // Fila para la fecha de generación
+            Row dateRow = sheet.createRow(0);
+            String fechaActual = java.time.LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"));
+            Cell dateCell = dateRow.createCell(columns.length - 1);
+            dateCell.setCellValue("Generado el: " + fechaActual);
+            
+            CellStyle dateStyle = workbook.createCellStyle();
+            dateStyle.setAlignment(HorizontalAlignment.RIGHT);
+            dateCell.setCellStyle(dateStyle);
+
+            Row headerRow = sheet.createRow(1);
             for (int i = 0; i < columns.length; i++) {
                 Cell cell = headerRow.createCell(i);
                 cell.setCellValue(columns[i]);
                 cell.setCellStyle(headerStyle);
             }
 
-            int rowNum = 1;
+            int rowNum = 2;
             for (Usuario usuario : usuarios) {
                 Row row = sheet.createRow(rowNum++);
                 row.createCell(0).setCellValue(usuario.getIdUsuario());
