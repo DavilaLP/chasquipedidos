@@ -28,13 +28,8 @@ public class SecurityInterceptor implements HandlerInterceptor {
                 return true;
             }
             
-            if (usuario == null) {
-                response.sendRedirect("/login");
-                return false;
-            }
-            
-            if (!"ADMIN".equalsIgnoreCase(usuario.getRol())) {
-                response.sendError(HttpServletResponse.SC_FORBIDDEN, "Acceso denegado: Se requiere rol de Administrador");
+            if (usuario == null || !"ADMIN".equalsIgnoreCase(usuario.getRol())) {
+                response.sendError(HttpServletResponse.SC_NOT_FOUND);
                 return false;
             }
         }

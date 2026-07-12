@@ -20,7 +20,6 @@
             <a href="#" onclick="showSection('productos')"><i class="fas fa-hamburger"></i> <span>Productos</span></a>
             <a href="#" onclick="showSection('categorias')"><i class="fas fa-tags"></i> <span>Categorías</span></a>
             <a href="#" onclick="showSection('motorizados')"><i class="fas fa-truck-fast"></i> <span>Motorizados</span></a>
-            <a href="#" onclick="showSection('quejas')"><i class="fas fa-frown"></i> <span>Quejas</span></a>
             <a href="#" onclick="showSection('usuarios')"><i class="fas fa-users"></i> <span>Usuarios</span></a>
         </nav>
     </aside>
@@ -72,13 +71,6 @@
                     <div class="card-info">
                         <p>Pedidos entregados</p>
                         <h3 id="entregadosCount">0</h3>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-icon"><i class="fas fa-exclamation-triangle"></i></div>
-                    <div class="card-info">
-                        <p>Quejas por resolver</p>
-                        <h3 id="quejasPendientes">0</h3>
                     </div>
                 </div>
             </div>
@@ -137,11 +129,6 @@
                 <h3><i class="fas fa-check-circle"></i> Motorizados Activos</h3>
                 <div id="activosList" class="motorizados-grid"></div>
             </div>
-        </section>
-
-        <section id="quejas" class="section">
-            <h2><i class="fas fa-message"></i> Centro de Quejas</h2>
-            <div id="quejasContainer"></div>
         </section>
 
         <section id="usuarios" class="section">

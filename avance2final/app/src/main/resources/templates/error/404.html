@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error 404 - ChasquiPedidos</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #ffffff;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        .error-container {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 3.5rem 4rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            max-width: 550px;
+            backdrop-filter: blur(10px);
+            animation: fadeIn 0.8s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .error-icon {
+            font-size: 4.5rem;
+            color: #f97316;
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 0 15px rgba(249, 115, 22, 0.4));
+        }
+        .error-code {
+            font-size: 7rem;
+            font-weight: 700;
+            color: #f97316;
+            margin: 0;
+            line-height: 1;
+            letter-spacing: -2px;
+            text-shadow: 0 0 30px rgba(249, 115, 22, 0.3);
+        }
+        .error-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin: 1.5rem 0 1rem;
+            color: #f8fafc;
+        }
+        .error-message {
+            color: #94a3b8;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 2.5rem;
+        }
+        .btn-home {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: #f97316;
+            color: white;
+            text-decoration: none;
+            padding: 14px 32px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 15px -3px rgba(249, 115, 22, 0.3);
+        }
+        .btn-home:hover {
+            background: #ea580c;
+            transform: translateY(-3px);
+            box-shadow: 0 15px 20px -3px rgba(249, 115, 22, 0.4);
+        }
+        .btn-home i {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="error-container">
+        <i class="fas fa-shield-alt error-icon"></i>
+        <h1 class="error-code">404</h1>
+        <h2 class="error-title">No tiene acceso a esta página.</h2>
+        <p class="error-message">La página que intenta visitar no existe o no posee permisos para acceder.</p>
+        
+        <a th:href="@{/}" class="btn-home">
+            <i class="fas fa-home"></i> Volver al Inicio
+        </a>
+    </div>
+
+</body>
+</html>

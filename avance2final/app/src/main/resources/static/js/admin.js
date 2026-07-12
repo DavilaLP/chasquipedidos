@@ -5,15 +5,6 @@ let productosList = [];
 let categoriasList = [];
 let restaurantesList = [];
 
-// Lista estática de quejas para mantener el módulo visual de soporte
-let quejasLista = [
-    { id: 1, usuario: "Elena Castro", pedidoId: 102, motivo: "Retraso en la entrega", fecha: "15/01/2025", estado: "Pendiente" },
-    { id: 2, usuario: "Mario Linares", pedidoId: 105, motivo: "Producto equivocado", fecha: "14/01/2025", estado: "Pendiente" },
-    { id: 3, usuario: "Silvia Ponce", pedidoId: 101, motivo: "Maltrato del repartidor", fecha: "13/01/2025", estado: "En revisión" },
-    { id: 4, usuario: "Rafael Soto", pedidoId: 104, motivo: "Comida fría", fecha: "12/01/2025", estado: "Resuelto" },
-    { id: 5, usuario: "Daniela Flores", pedidoId: 107, motivo: "Faltó un producto", fecha: "11/01/2025", estado: "Pendiente" }
-];
-
 async function cargarDatos() {
     try {
         const [resUsers, resPedidos, resRepartidores, resProductos, resCategorias, resRestaurantes] = await Promise.all([
@@ -97,7 +88,6 @@ async function cargarDatos() {
 function renderAll() {
     renderPedidos();
     renderMotorizados();
-    renderQuejas();
     renderUsuarios();
     renderProductos();
     renderCategorias();
@@ -117,9 +107,6 @@ function actualizarDashboard() {
     let entregados = pedidosList.filter(p => p.estadoPedido === "Entregado").length;
     document.getElementById("pendientesCount").innerText = pendientes;
     document.getElementById("entregadosCount").innerText = entregados;
-    
-    let quejasPend = quejasLista.filter(q => q.estado !== "Resuelto").length;
-    document.getElementById("quejasPendientes").innerText = quejasPend;
 }
 
 // ==========================================
@@ -456,45 +443,6 @@ async function guardarMotorizadoEdicion(e, id) {
         }
     } catch (err) {
         console.error(err);
-    }
-}
-
-// ==========================================
-// GESTIÓN DE QUEJAS
-// ==========================================
-function renderQuejas() {
-    const container = document.getElementById("quejasContainer");
-    if (!container) return;
-    
-    container.innerHTML = '<div class="quejas-list"></div>';
-    const quejasListDiv = container.querySelector(".quejas-list");
-    
-    quejasLista.forEach(q => {
-        const estadoClass = q.estado === "Resuelto" ? "badge-resuelto" : 
-                            (q.estado === "Pendiente" ? "badge-pendiente" : "badge-en-revisión");
-        quejasListDiv.innerHTML += `
-            <div class="queja-item">
-                <div style="flex:1">
-                    <strong><i class="fas fa-user-circle"></i> ${q.usuario}</strong> 
-                    <span style="color:#f97316;">| Pedido #${q.pedidoId}</span><br>
-                    <small><i class="fas fa-calendar"></i> ${q.fecha} | ${q.motivo}</small>
-                    <div style="margin-top: 8px;"><span class="badge ${estadoClass}">${q.estado}</span></div>
-                </div>
-                ${q.estado !== "Resuelto" ? 
-                    `<button onclick="resolverQueja(${q.id})"><i class="fas fa-check-double"></i> Resolver</button>` : 
-                    `<span style="color:#10b981;"><i class="fas fa-check-circle"></i> Resuelta</span>`}
-            </div>
-        `;
-    });
-}
-
-function resolverQueja(id) {
-    const queja = quejasLista.find(q => q.id === id);
-    if (queja) {
-        queja.estado = "Resuelto";
-        renderQuejas();
-        actualizarDashboard();
-        mostrarModal("Soporte Técnico", `Se resolvió la queja del usuario ${queja.usuario}.`);
     }
 }
 
