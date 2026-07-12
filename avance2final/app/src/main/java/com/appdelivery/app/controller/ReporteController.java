@@ -3,6 +3,8 @@ package com.appdelivery.app.controller;
 import com.appdelivery.app.entity.Pedido;
 import com.appdelivery.app.entity.Usuario;
 import com.appdelivery.app.repository.PedidoRepository;
+import com.appdelivery.app.entity.Producto;
+import com.appdelivery.app.repository.ProductoRepository;
 import com.appdelivery.app.repository.UsuarioRepository;
 import com.lowagie.text.*;
 import com.lowagie.text.Font;
@@ -16,12 +18,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
 import java.awt.Color;
 import java.math.BigDecimal;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/admin/reportes")
@@ -32,6 +36,9 @@ public class ReporteController {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private ProductoRepository productoRepository;
 
     @GetMapping("/pedidos/pdf")
     public void exportarPedidosPDF(HttpServletResponse response) throws IOException {
@@ -228,6 +235,134 @@ public class ReporteController {
 
         document.add(table);
         document.close();
+    }
+
+    @GetMapping("/productos/pdf")
+    public void exportarProductosPDF(@RequestParam(required = false) String buscar, HttpServletResponse response) throws IOException {
+        response.setContentType("application/pdf");
+        response.setHeader("Content-Disposition", "attachment; filename=reporte_productos.pdf");
+
+        List<Producto> productos = productoRepository.findAll();
+        if (buscar != null && !buscar.trim().isEmpty()) {
+            String buscarLower = buscar.toLowerCase().trim();
+            productos = productos.stream()
+                .filter(p -> p.getNombre() != null && p.getNombre().toLowerCase().contains(buscarLower))
+                .collect(Collectors.toList());
+        }
+
+        Document document = new Document(PageSize.A4);
+        PdfWriter.getInstance(document, response.getOutputStream());
+        document.open();
+
+        Font fontTitle = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
+        fontTitle.setSize(18);
+        fontTitle.setColor(new Color(255, 153, 0)); // Naranja para productos
+
+        Font fontHeader = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
+        fontHeader.setSize(11);
+        fontHeader.setColor(Color.WHITE);
+
+        Font fontBody = FontFactory.getFont(FontFactory.HELVETICA);
+        fontBody.setSize(9);
+
+        String fechaActual = java.time.LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"));
+        Paragraph dateParagraph = new Paragraph("Generado el: " + fechaActual, fontBody);
+        dateParagraph.setAlignment(Paragraph.ALIGN_RIGHT);
+        document.add(dateParagraph);
+
+        Paragraph paragraph = new Paragraph("Reporte de Productos - ChasquiPedidos", fontTitle);
+        paragraph.setAlignment(Paragraph.ALIGN_CENTER);
+        paragraph.setSpacingAfter(20);
+        document.add(paragraph);
+
+        PdfPTable table = new PdfPTable(6);
+        table.setWidthPercentage(100);
+        table.setWidths(new float[] {1f, 3f, 1.5f, 1f, 2f, 2f});
+
+        String[] headers = {"ID", "Nombre", "Precio", "Stock", "Categoría", "Restaurante"};
+        for (String header : headers) {
+            PdfPCell cell = new PdfPCell(new Phrase(header, fontHeader));
+            cell.setBackgroundColor(new Color(255, 153, 0));
+            cell.setPadding(6);
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table.addCell(cell);
+        }
+
+        for (Producto producto : productos) {
+            table.addCell(new PdfPCell(new Phrase(String.valueOf(producto.getIdProducto()), fontBody)));
+            table.addCell(new PdfPCell(new Phrase(producto.getNombre(), fontBody)));
+            table.addCell(new PdfPCell(new Phrase(producto.getPrecio() != null ? "S/ " + producto.getPrecio().toString() : "S/ 0.0", fontBody)));
+            table.addCell(new PdfPCell(new Phrase(producto.getStock() != null ? String.valueOf(producto.getStock()) : "0", fontBody)));
+            table.addCell(new PdfPCell(new Phrase(producto.getCategoria() != null ? producto.getCategoria().getNombre() : "N/A", fontBody)));
+            table.addCell(new PdfPCell(new Phrase(producto.getRestaurante() != null ? producto.getRestaurante().getNombre() : "N/A", fontBody)));
+        }
+
+        document.add(table);
+        document.close();
+    }
+
+    @GetMapping("/productos/excel")
+    public void exportarProductosExcel(@RequestParam(required = false) String buscar, HttpServletResponse response) throws IOException {
+        response.setContentType("application/octet-stream");
+        response.setHeader("Content-Disposition", "attachment; filename=reporte_productos.xlsx");
+
+        List<Producto> productos = productoRepository.findAll();
+        if (buscar != null && !buscar.trim().isEmpty()) {
+            String buscarLower = buscar.toLowerCase().trim();
+            productos = productos.stream()
+                .filter(p -> p.getNombre() != null && p.getNombre().toLowerCase().contains(buscarLower))
+                .collect(Collectors.toList());
+        }
+
+        try (Workbook workbook = new XSSFWorkbook()) {
+            Sheet sheet = workbook.createSheet("Productos");
+
+            CellStyle headerStyle = workbook.createCellStyle();
+            headerStyle.setFillForegroundColor(IndexedColors.ORANGE.getIndex());
+            headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+            org.apache.poi.ss.usermodel.Font headerFont = workbook.createFont();
+            headerFont.setColor(IndexedColors.WHITE.getIndex());
+            headerFont.setBold(true);
+            headerStyle.setFont(headerFont);
+
+            String[] columns = {"ID", "Nombre", "Descripción", "Precio (S/)", "Stock", "Categoría", "Restaurante", "Estado"};
+
+            // Fila para la fecha de generación
+            Row dateRow = sheet.createRow(0);
+            String fechaActual = java.time.LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"));
+            Cell dateCell = dateRow.createCell(columns.length - 1);
+            dateCell.setCellValue("Generado el: " + fechaActual);
+            
+            CellStyle dateStyle = workbook.createCellStyle();
+            dateStyle.setAlignment(HorizontalAlignment.RIGHT);
+            dateCell.setCellStyle(dateStyle);
+
+            Row headerRow = sheet.createRow(1);
+            for (int i = 0; i < columns.length; i++) {
+                Cell cell = headerRow.createCell(i);
+                cell.setCellValue(columns[i]);
+                cell.setCellStyle(headerStyle);
+            }
+
+            int rowNum = 2;
+            for (Producto producto : productos) {
+                Row row = sheet.createRow(rowNum++);
+                row.createCell(0).setCellValue(producto.getIdProducto());
+                row.createCell(1).setCellValue(producto.getNombre());
+                row.createCell(2).setCellValue(producto.getDescripcion() != null ? producto.getDescripcion() : "");
+                row.createCell(3).setCellValue(producto.getPrecio() != null ? producto.getPrecio().doubleValue() : 0.0);
+                row.createCell(4).setCellValue(producto.getStock() != null ? producto.getStock() : 0);
+                row.createCell(5).setCellValue(producto.getCategoria() != null ? producto.getCategoria().getNombre() : "N/A");
+                row.createCell(6).setCellValue(producto.getRestaurante() != null ? producto.getRestaurante().getNombre() : "N/A");
+                row.createCell(7).setCellValue(producto.getDisponible() != null && producto.getDisponible() ? "Disponible" : "Agotado");
+            }
+
+            for (int i = 0; i < columns.length; i++) {
+                sheet.autoSizeColumn(i);
+            }
+
+            workbook.write(response.getOutputStream());
+        }
     }
 
     @GetMapping("/usuarios/excel")

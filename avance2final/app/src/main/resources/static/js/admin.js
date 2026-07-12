@@ -655,6 +655,15 @@ function filtrarProductosAdmin() {
     });
 }
 
+function exportarProductos(formato) {
+    const buscar = document.getElementById("buscarAdminProductos").value.trim();
+    let url = `/admin/reportes/productos/${formato}`;
+    if (buscar) {
+        url += `?buscar=${encodeURIComponent(buscar)}`;
+    }
+    window.location.href = url;
+}
+
 function nuevoProducto() {
     let restOpts = "";
     restaurantesList.forEach(r => {
